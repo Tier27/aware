@@ -1,0 +1,168 @@
+/* Fonts
+================================================== */
+
+@font-face {
+    font-family: "Proxima900";
+    src: url("../fonts/proximanova-extrabold.woff") format('woff');
+}
+@font-face {
+    font-family: "Proxima700";
+    src: url("../fonts/proximanova-bold.woff") format('woff');
+}
+@font-face {
+    font-family: "Proxima600";
+    src: url("../fonts/proximanova-semibold.woff") format('woff');
+}
+@font-face {
+    font-family: "Proxima400";
+    src: url("../fonts/proximanova-regular.woff") format('woff');
+}
+
+/* Colors
+green - #418997
+orange - #F58866
+*/
+.top-bar {
+	margin-bottom: 10px;
+}
+.top-bar a {
+	font-family: 'Open Sans', sans-serif;
+}
+.top-bar i {
+	color: #F58866;
+}
+p {
+	font-family: 'Open Sans', sans-serif;
+}
+.orange {
+	background: #F58866;
+}
+.orange:hover {
+	background: #f3754e;
+}
+
+.zippy:before {
+	content: "◼ ";
+    color: #008cba;
+}
+
+/* General
+================================================== */
+body {
+	background: url('../img/brushed.png');
+}
+#aware h1, h2, h3, h4, h5, h6 {
+	font-family: "Proxima600";
+	color: #333333;
+}
+.section {
+	border-radius: 4px;
+}
+.section h3 {
+	font-family: "Proxima600";
+}
+.section h3 i {
+	color: #418997;
+}
+.section a {
+	color: #418997;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 90%;
+}
+.section a:hover {
+	color: #326973;
+}
+.pageheader h2 {
+	font-family: "Proxima600";
+}
+
+/* Client
+================================================== */
+
+.avatar {
+	max-width: 30px;
+	margin-right: 10px;
+	border-radius: 4px;
+}
+footer a {
+	color: #418997;
+	font-size: 90%;
+}
+.section h5 {
+	font-family: "Proxima600";
+}
+.aware-widget-section {
+	margin: 20px 0;
+}
+.aware-widget-section i {
+	color: #222222;
+	font-size: 85%;
+}
+.widget-image {
+	border: 1px solid #d9d7d7;
+}
+/* Communication Widget */
+.aware-widget-communication-discussion {
+	background: #fff;
+	border-radius: 4px;
+}
+.aware-widget-communication-discussion h6 {
+	color: #222222;
+}
+.aware-widget-communication-discussion i {
+	color: #F58866;
+	padding-right: 5px;
+}
+.aware-widget-communication-discussion p {
+	margin-bottom: 0;
+	font-size: 75%;
+	color: #222222;
+}
+.aware-widget-communication-discussion a {
+	font-weight: 600;
+	font-size: 100%;
+	color: #193969;
+}
+.aware-widget-communication-discussion a:hover {
+	color: #222222;
+}
+/* Admin
+================================================== */
+.vertical a {
+	color: #3d3d3d;
+	font-family: 'Open Sans', sans-serif !important;
+	margin-left: -1px;
+	padding: 10px !important;
+	border-bottom: 1px solid #d9d7d7;
+	border-left: 1px solid #d9d7d7;
+	font-size: 90% !important;	
+}
+.vertical li.active a {
+	border-left: 3px solid #F58866;
+}
+.vertical li {
+	width: 100%;
+}
+.tabs-content {
+	background: #ffffff;
+	border-left: 2px solid #d9d7d7;
+	padding: 25px;
+}
+/* Client Create Thread
+================================================== */
+.aware-thread-toolbar dd a {
+	background: #f2f2f2;
+	border-radius: 3px;
+	color: #333;
+	border: 1px solid #d8d8d8;
+}
+.aware-thread-comment-tools a {
+	padding: 3px 20px !important;
+	background: #f2f2f2;
+	border: 1px solid #d9d7d7 !important;
+	border-radius: 3px;
+	color: #444;
+}
+.aware-thread-comment-tools a:hover {
+	background: #f2f2f2;
+}

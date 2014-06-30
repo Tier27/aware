@@ -1,0 +1,14 @@
+#client-update-metabox  select.clients {
+  float: left;
+  margin-right: 20px;
+}
+#client-update-metabox  textarea.message {
+  width: 500px;
+  height: 100px;
+}
+#client-update-metabox  input[name="submit"] {
+  float: right;
+}
+.postbox .hndle {
+  padding: 0px 12px 12px;
+}
