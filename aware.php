@@ -60,6 +60,7 @@ function register_css()
     wp_register_style( 'aware-admin', AWARE_URL . "assets/css/admin.css", array(), '0.0.1' );
     wp_register_style( 'aware-admin-custom', AWARE_URL . "assets/css/custom-style.css", array(), '0.0.1' );
     wp_register_style( 'aware-foundation', AWARE_URL . "assets/css/foundation.css", array(), '0.0.1' );
+    wp_register_style( 'aware-foundation-ui', AWARE_URL . "assets/css/ui.css", array(), '0.0.1' );
 }
 
 add_action('admin_print_styles', 'do_css' );
@@ -67,7 +68,10 @@ function do_css()
 {
     wp_enqueue_style('aware-admin');
     wp_enqueue_style('aware-admin-custom');
-    if( $_GET['page'] == 'aware_dashboard' ) wp_enqueue_style('aware-foundation');
+    if( $_GET['page'] == 'aware_dashboard' ) :
+	wp_enqueue_style('aware-foundation');
+	wp_enqueue_style('aware-foundation-ui');
+    endif;
 }
 
 add_action('admin_print_scripts', 'do_jslibs' );
@@ -314,9 +318,7 @@ function aware_accordion_part( $dt ) {
   <dd class="accordion-navigation">
     <a href="#client-<?php echo $datum->ID; ?>"><?php echo get_avatar( $datum->ID ); ?> <?php echo $datum->display_name; ?></a>
     <div id="client-<?php echo $datum->ID; ?>" class="content">
-	<form>
-		<input name="name">
-	</form>
+	<?php aware_accordion_part_form( $datum ); ?>
     </div>
   </dd>
 <?php
@@ -325,13 +327,90 @@ function aware_accordion_part( $dt ) {
   <dd class="accordion-navigation">
     <a href="#client-new"><i class="fa fa-plus"></i> Add new</a>
     <div id="client-new" class="content">
-      Panel 1. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      <?php aware_accordion_part_form( null, 'add' ); ?>
     </div>
   </dd>
         </dl>
       </div>
 <?php
 }
+
+function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { ?>
+<?php if( $obj != NULL ) $meta = get_user_meta( $obj->ID ); ?>
+<form>
+  <div class="row">
+    <div class="large-6 columns">
+      <label>First name
+        <input type="text" name="first-name" value="<?php echo $meta["first_name"][0]; ?>"/>
+      </label>
+    </div>
+    <div class="large-6 columns">
+      <label>Last name
+        <input type="text" name="last-name" value="<?php echo $meta["last_name"][0]; ?>"/>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-4 columns">
+      <label>Email
+        <input type="text" name="email" value="<?php echo $obj->user_email; ?>" />
+      </label>
+    </div>
+    <div class="large-4 columns">
+      <label>Password
+        <input type="password" name="password" />
+      </label>
+    </div>
+    <div class="large-4 columns">
+      <label>Client ID
+        <input type="text" name="client-id" value="<?php echo $meta["client-id"][0]; ?>"/>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <?php $managers = admin_get_managers(); ?>
+      <label>Manager
+        <select name="manager">
+	  <option value="0">No manager</option>
+	  <?php foreach( $managers as $manager ) : ?>
+	  <option value="<?php echo $manager->ID; ?>" <?php if( $manager->ID == $meta["manager"][0] ) echo "selected=\"selected\""; ?>><?php echo $manager->display_name ?></option>
+	  <?php endforeach; ?>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <label>Projects</label>
+      <?php $projects = admin_get_projects(); ?>
+      <?php foreach( $projects as $project ) : ?>
+      <input type="checkbox" name="projects[]" value="<?php echo $project->ID; ?>" <?php if( in_array( $project->ID, unserialize($meta["projects"][0])) ) echo "checked=\"checked\""; ?>><label for="checkbox1"><?php echo $project->post_title; ?></label>
+      <?php endforeach; ?>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <label>Notes (private)
+        <textarea name="notes" placeholder="Notes about your client"><?php echo $meta["notes"][0]; ?></textarea>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <input name="ID" value="<?php echo $obj->ID; ?>" class="hidden">
+      <input name="action" value="admin_update_client" class="hidden">
+      <input name="aware-update-client" class="button radius tiny" value="<?php echo ucfirst($action); ?> client">
+      <?php if( $action == 'update' ) : ?><input name="aware-delete-client" class="red button radius tiny" value="Delete client"><?php endif; ?>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns response hidden">
+      The client has been updated.
+    </div>
+  </div>
+</form>
+<?php }
 
 function aware_get_ai1ec_events() {
 
@@ -477,4 +556,49 @@ function aware_save_manager_field( $user_id ) {
 
 	/* Copy and paste this line for additional fields. Make sure to change 'twitter' to the field ID. */
 	update_usermeta( $user_id, 'aware_manager', $_POST['aware-manager'] );
+}
+
+add_action( 'wp_ajax_admin_update_client', 'admin_update_client' );
+
+function admin_update_client() {
+	if( !isset($_POST['ID']) || empty($_POST['ID']) ) :
+		admin_add_client();
+	endif;
+	$args = array( 
+		'ID' => $_POST['ID'], 
+		'first_name' => $_POST['first-name'],
+		'last_name' => $_POST['last-name'],
+		'user_email' => $_POST['email'],
+	);
+	if( $_POST['password'] != '' ) $args['user_pass'] = $_POST['password'];
+	$user_id = wp_update_user( $args );
+	update_user_meta( $user_id, 'manager', $_POST['manager'] );
+	update_user_meta( $user_id, 'projects', $_POST['projects'] );
+	update_user_meta( $user_id, 'client-id', $_POST['client-id'] );
+	update_user_meta( $user_id, 'notes', $_POST['notes'] );
+	die();
+}
+
+function admin_add_client() {
+	$args = array(
+		'user_login' => $_POST['email'],
+		'first_name' => $_POST['first-name'],
+		'last_name' => $_POST['last-name'],
+		'user_email' => $_POST['email'],
+		'user_pass' => $_POST['password'],
+		'role' => 'client',
+	);
+	$user_id = wp_insert_user( $args );
+	$response = array(
+		"ID" => $user_id,
+		"text" => "The client has been created",
+	);
+	echo json_encode($response);
+	die();
+}
+
+add_action( 'wp_ajax_admin_delete_client', 'admin_delete_client' );
+
+function admin_delete_client() {
+	if( isset( $_POST['ID'] ) && !empty( $_POST['ID'] ) ) wp_delete_user( $_POST['ID'] );
 }

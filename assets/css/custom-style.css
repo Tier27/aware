@@ -203,3 +203,6 @@ footer a {
 .submission-response {
 	display: none;
 }
+.red.button, .red.button:hover {
+	color: white;
+}

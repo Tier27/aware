@@ -26,4 +26,23 @@ jQuery(function($){
 		});
 	});
 
+	$('input[name="aware-update-client"]').click(function(){
+		$form = $(this).closest('form');
+		$form.find('.response').html('Updating client...').show();
+		$.post(ajaxurl, $form.serialize(), function(res){
+			location.reload();
+			//alert(res);
+			$form.find('.response').html('The client has been updated.').show();
+		});
+	});
+
+	$('input[name="aware-delete-client"]').click(function(){
+		$form = $(this).closest('form');
+		$form.find('.response').html('Deleting client...').show();
+		ID = $form.find('input[name="ID"]').val();
+		$.post(ajaxurl, { action: 'admin_delete_client', ID: ID }, function(res){
+			location.reload();
+		});
+	});
+
 });
