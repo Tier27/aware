@@ -15,9 +15,18 @@
     <input type="text" name="aware-administrative-email" value="<?php echo get_option('aware_administrative_email');?>">
     <h6>Client Administrative Email</h6>
     <input type="text" name="aware-client-administrative-email" value="<?php echo get_option('aware_client_administrative_email');?>">
+    <h6>Development Mode (this allows administrators to act as clients)</h6>
+    <div class="large-12 columns">
+      <input type="radio" name="aware-development-mode" value="1" <?php if( get_option('aware_development_mode') == 1 ) echo "checked=\"checked\"";?>><label>On</label>
+      <input type="radio" name="aware-development-mode" value="0"<?php if( get_option('aware_development_mode') == 0 ) echo "checked=\"checked\"";?> ><label>Off</label>
+    </div>
   </div>
 </div> <!--/.row-->
 <input name="aware-update-settings" class="button radius tiny" value="Update">
 <input name="action" value="admin_update_settings" style="display: none;">
+  <div class="row">
+    <div class="large-12 columns response hidden">
+    </div>
+  </div>
 </form>
 

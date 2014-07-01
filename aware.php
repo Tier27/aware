@@ -81,6 +81,7 @@ function do_jslibs()
     wp_enqueue_script( 'aware-main', AWARE_URL . 'assets/js/aware.js', array( 'jquery' ) );
     wp_enqueue_script( 'aware-foundation', AWARE_URL . 'assets/js/foundation.min.js', array( 'jquery' ) );
     wp_enqueue_script( 'aware-foundation-accordion', AWARE_URL . 'assets/js/foundation/foundation.accordion.js', array( 'jquery' ) );
+    wp_enqueue_script( 'aware-foundation-datepicker', AWARE_URL . 'assets/js/foundation/foundation-datepicker.js', array( 'jquery' ) );
     add_action( 'admin_head', 'wp_tiny_mce' );
 }
 
@@ -161,6 +162,7 @@ function client_get_updates ( $args = array() ) {
 function admin_get_clients() {
 
 	$args = array( 'role' => 'client' );
+	if( get_option( 'aware_development_mode' ) == 1 ) $args['role'] = '';
 	return get_users( $args );
 
 }
@@ -199,7 +201,7 @@ function admin_create_update() {
 function admin_get_events ( $args = array() ) {
 
 	$basis = array(
-		'post_type'	=> 'ai1ec_event',
+		'post_type'	=> 'event',
 	);
 	$args = array_merge($basis, $args);
 	return get_posts( $args );
@@ -335,6 +337,66 @@ function aware_accordion_part( $dt ) {
 <?php
 }
 
+function aware_accordion_part_projects() {
+	$projects = admin_get_projects();
+?>
+
+      <div class="large-12 medium-12 small-12 columns panel section">
+        <h3><i class="fa fa-space-shuttle"></i> Projects</h3><hr>
+        <dl class="accordion" data-accordion>
+<?php
+	foreach( $projects as $project ) :
+?>
+  <dd class="accordion-navigation">
+    <a href="#project-<?php echo $project->ID; ?>"><?php echo get_avatar( $project->ID ); ?> <?php echo $project->post_title; ?></a>
+    <div id="project-<?php echo $project->ID; ?>" class="content">
+	<?php aware_accordion_part_project_form( $project ); ?>
+    </div>
+  </dd>
+<?php
+	endforeach;
+?>
+  <dd class="accordion-navigation">
+    <a href="#project-new"><i class="fa fa-plus"></i> Add new</a>
+    <div id="project-new" class="content">
+      <?php aware_accordion_part_project_form( null, 'add' ); ?>
+    </div>
+  </dd>
+        </dl>
+      </div>
+<?php
+}
+
+function aware_accordion_part_events() {
+	$events = admin_get_events();
+?>
+
+      <div class="large-12 medium-12 small-12 columns panel section">
+        <h3><i class="fa fa-space-shuttle"></i> Events</h3><hr>
+        <dl class="accordion" data-accordion>
+<?php
+	foreach( $events as $event ) :
+?>
+  <dd class="accordion-navigation">
+    <a href="#event-<?php echo $event->ID; ?>"><?php echo get_avatar( $event->ID ); ?> <?php echo $event->post_title; ?></a>
+    <div id="event-<?php echo $event->ID; ?>" class="content">
+	<?php aware_accordion_part_event_form( $event ); ?>
+    </div>
+  </dd>
+<?php
+	endforeach;
+?>
+  <dd class="accordion-navigation">
+    <a href="#event-new"><i class="fa fa-plus"></i> Add new</a>
+    <div id="event-new" class="content">
+      <?php aware_accordion_part_event_form( null, 'add' ); ?>
+    </div>
+  </dd>
+        </dl>
+      </div>
+<?php
+}
+
 function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { ?>
 <?php if( $obj != NULL ) $meta = get_user_meta( $obj->ID ); ?>
 <form>
@@ -399,8 +461,8 @@ function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { ?>
   <div class="row">
     <div class="large-12 columns">
       <input name="ID" value="<?php echo $obj->ID; ?>" class="hidden">
-      <input name="action" value="admin_update_client" class="hidden">
-      <input name="aware-update-client" class="button radius tiny" value="<?php echo ucfirst($action); ?> client">
+      <input name="action" value="admin_<?php echo $action; ?>_client" class="hidden">
+      <input name="aware-<?php echo $action; ?>-client" class="button radius tiny" value="<?php echo ucfirst($action); ?> client">
       <?php if( $action == 'update' ) : ?><input name="aware-delete-client" class="red button radius tiny" value="Delete client"><?php endif; ?>
     </div>
   </div>
@@ -411,6 +473,145 @@ function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { ?>
   </div>
 </form>
 <?php }
+
+function aware_accordion_part_project_form( $project = NULL, $action = 'update' ) { ?>
+<form>
+  <div class="row">
+    <div class="large-6 columns">
+      <label>Name
+        <input type="text" name="name" value="<?php echo $project->post_title; ?>"/>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <?php $clients = admin_get_clients(); ?>
+      <label>Client
+        <select name="client">
+	  <option value="0">No client</option>
+	  <?php $this_client = get_post_meta( $project->ID, 'client', true ); ?>
+	  <?php foreach( $clients as $client ) : ?>
+	  <option value="<?php echo $client->ID; ?>" <?php if( $client->ID == $this_client ) echo "selected=\"selected\""; ?>><?php echo $client->display_name ?></option>
+	  <?php endforeach; ?>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <label>Notes (private)
+        <textarea name="notes" placeholder="Notes about your project"><?php echo get_post_meta( $project->ID, 'notes', true ); ?></textarea>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <input name="ID" value="<?php echo $project->ID; ?>" class="hidden">
+      <input name="action" value="admin_<?php echo $action; ?>_project" class="hidden">
+      <input name="aware-<?php echo $action; ?>-project" class="button radius tiny" value="<?php echo ucfirst($action); ?> project">
+      <?php if( $action == 'update' ) : ?><input name="aware-delete-project" class="red button radius tiny" value="Delete project"><?php endif; ?>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns response hidden">
+      The project has been updated.
+    </div>
+  </div>
+</form>
+<?php }
+
+function aware_accordion_part_event_form( $event = NULL, $action = 'update' ) { ?>
+<?php
+//To handle the mess that is time conversion
+$time = ( $time = get_post_meta( $event->ID, 'start_time', true ) ) ? $time : time(); 
+$date = date('m/d/Y', $time);
+$hour = date('g', $time);
+$minute = date('i', $time);
+$time_suffix = date('A', $time);
+?>
+<form>
+  <div class="row">
+    <div class="large-12 columns">
+      <label>Name
+        <input type="text" name="name" value="<?php echo $event->post_title; ?>"/>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-6 columns">
+      <label>Start Date
+        <input type="text" class="fdatepicker" name="start-date" value="<?php echo $date; ?>"/>
+      </label>
+    </div>
+    <div class="large-2 columns">
+      <label>&nbsp;
+        <select class="foundation" name="start-hour">
+	    <?php for( $i=1; $i<=12; $i++ ) : ?><option value=<?php echo $i; ?> <?php if( $i == $hour ) echo "selected=\"selected\""; ?>><?php echo $i; ?></option><?php endfor; ?>
+        </select>
+      </label>
+    </div>
+    <div class="large-2 columns">
+      <label>&nbsp;
+        <select class="foundation" name="start-minute">
+	    <?php for( $i=0; $i<60; $i++ ) : ?><option value=<?php echo $i; ?> <?php if( $i == $minute ) echo "selected=\"selected\""; ?>><?php if( $i < 10 ) echo '0'; echo $i; ?></option><?php endfor; ?>
+        </select>
+      </label>
+    </div>
+    <div class="large-2 columns">
+      <label>&nbsp;
+        <select class="foundation" name="start-suffix">
+		<option value="AM" <?php if( 'AM' == $time_suffix ) echo "selected=\"selected\""; ?>>AM</option>
+		<option value="PM" <?php if( 'PM' == $time_suffix ) echo "selected=\"selected\""; ?>>PM</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <?php $clients = admin_get_clients(); ?>
+      <label>Client
+        <select name="client">
+	  <option value="0">No client</option>
+	  <?php $this_client = get_post_meta( $event->ID, 'client', true ); ?>
+	  <?php foreach( $clients as $client ) : ?>
+	  <option value="<?php echo $client->ID; ?>" <?php if( $client->ID == $this_client ) echo "selected=\"selected\""; ?>><?php echo $client->display_name ?></option>
+	  <?php endforeach; ?>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <label>Projects</label>
+      <?php $projects = admin_get_projects(); ?>
+      <?php foreach( $projects as $project ) : ?>
+      <input type="checkbox" name="projects[]" value="<?php echo $project->ID; ?>" <?php if( in_array( $project->ID, get_post_meta( $event->ID, 'projects', true )) ) echo "checked=\"checked\""; ?>><label for="checkbox1"><?php echo $project->post_title; ?></label>
+      <?php endforeach; ?>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <label>Notes (private)
+        <textarea name="notes" placeholder="Notes about your event"><?php echo get_post_meta( $event->ID, 'notes', true ); ?></textarea>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <input name="ID" value="<?php echo $event->ID; ?>" class="hidden">
+      <input name="action" value="admin_<?php echo $action; ?>_event" class="hidden">
+      <input name="aware-<?php echo $action; ?>-event" class="button radius tiny" value="<?php echo ucfirst($action); ?> event">
+      <?php if( $action == 'update' ) : ?><input name="aware-delete-event" class="red button radius tiny" value="Delete event"><?php endif; ?>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns response hidden">
+      The event has been updated.
+    </div>
+  </div>
+</form>
+<?php }
+
 
 function aware_get_ai1ec_events() {
 
@@ -519,6 +720,8 @@ function admin_update_settings() {
 	print_r( $_POST );
 	if( !empty( $_POST['aware-administrative-email'] ) ) update_option('aware_administrative_email', $_POST['aware-administrative-email']);
 	if( !empty( $_POST['aware-client-administrative-email'] ) ) update_option('aware_client_administrative_email', $_POST['aware-client-administrative-email']);
+	update_option('aware_development_mode', $_POST['aware-development-mode']);
+	die();
 }
 
 add_action( 'show_user_profile', 'aware_add_manager_field' );
@@ -561,9 +764,6 @@ function aware_save_manager_field( $user_id ) {
 add_action( 'wp_ajax_admin_update_client', 'admin_update_client' );
 
 function admin_update_client() {
-	if( !isset($_POST['ID']) || empty($_POST['ID']) ) :
-		admin_add_client();
-	endif;
 	$args = array( 
 		'ID' => $_POST['ID'], 
 		'first_name' => $_POST['first-name'],
@@ -579,6 +779,8 @@ function admin_update_client() {
 	die();
 }
 
+add_action( 'wp_ajax_admin_add_client', 'admin_add_client' );
+
 function admin_add_client() {
 	$args = array(
 		'user_login' => $_POST['email'],
@@ -589,6 +791,10 @@ function admin_add_client() {
 		'role' => 'client',
 	);
 	$user_id = wp_insert_user( $args );
+	update_user_meta( $user_id, 'manager', $_POST['manager'] );
+	update_user_meta( $user_id, 'projects', $_POST['projects'] );
+	update_user_meta( $user_id, 'client-id', $_POST['client-id'] );
+	update_user_meta( $user_id, 'notes', $_POST['notes'] );
 	$response = array(
 		"ID" => $user_id,
 		"text" => "The client has been created",
@@ -602,3 +808,83 @@ add_action( 'wp_ajax_admin_delete_client', 'admin_delete_client' );
 function admin_delete_client() {
 	if( isset( $_POST['ID'] ) && !empty( $_POST['ID'] ) ) wp_delete_user( $_POST['ID'] );
 }
+
+add_action( 'wp_ajax_admin_update_project', 'admin_update_project' );
+
+function admin_update_project() {
+	$args = array( 
+		'ID' => $_POST['ID'], 
+		'post_title' => $_POST['name'],
+		'post_name' => sanitize_title($_POST['name']),
+	);
+	$post_id = wp_update_post( $args );
+	update_post_meta( $post_id, 'notes', $_POST['notes'] );
+	update_post_meta( $post_id, 'client', $_POST['client'] );
+	echo $post_id;
+	die();
+}
+
+add_action( 'wp_ajax_admin_add_project', 'admin_add_project' );
+
+function admin_add_project() {
+	$args = array( 
+		'post_title' => $_POST['name'],
+		'post_name' => sanitize_title($_POST['name']),
+		'post_type' => 'project',
+		'post_status' => 'publish'
+	);
+	$post_id = wp_insert_post( $args );
+	update_post_meta( $post_id, 'notes', $_POST['notes'] );
+	echo $post_id;
+	die();
+}
+
+add_action( 'wp_ajax_admin_delete_project', 'admin_delete_project' );
+
+function admin_delete_project() {
+	if( isset( $_POST['ID'] ) && !empty( $_POST['ID'] ) ) wp_delete_post( $_POST['ID'] );
+}
+
+add_action( 'wp_ajax_admin_update_event', 'admin_update_event' );
+
+function admin_update_event() {
+	$args = array( 
+		'ID' => $_POST['ID'], 
+		'post_title' => $_POST['name'],
+		'post_name' => sanitize_title($_POST['name']),
+	);
+	$post_id = wp_update_post( $args );
+	$time = $_POST['start-date'] . ' ' . $_POST['start-hour'] . ':' . $_POST['start-minute'] . ':00' . $_POST['start-suffix'];
+	update_post_meta( $post_id, 'start_time', strtotime($time) );
+	update_post_meta( $post_id, 'notes', $_POST['notes'] );
+	update_post_meta( $post_id, 'client', $_POST['client'] );
+	update_post_meta( $post_id, 'projects', $_POST['projects'] );
+	//echo $post_id;
+	die();
+}
+
+add_action( 'wp_ajax_admin_add_event', 'admin_add_event' );
+
+function admin_add_event() {
+	$args = array( 
+		'post_title' => $_POST['name'],
+		'post_name' => sanitize_title($_POST['name']),
+		'post_type' => 'event',
+		'post_status' => 'publish'
+	);
+	$post_id = wp_insert_post( $args );
+	$time = $_POST['start-date'] . ' ' . $_POST['start-hour'] . ':' . $_POST['start-minute'] . ':00' . $_POST['start-suffix'];
+	update_post_meta( $post_id, 'start_time', strtotime($time) );
+	update_post_meta( $post_id, 'notes', $_POST['notes'] );
+	update_post_meta( $post_id, 'client', $_POST['client'] );
+	update_post_meta( $post_id, 'projects', $_POST['projects'] );
+	echo $post_id;
+	die();
+}
+
+add_action( 'wp_ajax_admin_delete_event', 'admin_delete_event' );
+
+function admin_delete_event() {
+	if( isset( $_POST['ID'] ) && !empty( $_POST['ID'] ) ) wp_delete_post( $_POST['ID'] );
+}
+

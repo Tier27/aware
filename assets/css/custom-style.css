@@ -206,3 +206,9 @@ footer a {
 .red.button, .red.button:hover {
 	color: white;
 }
+.ui-datepicker {
+	margin-top: -29px;
+}
+select.foundation {
+	height: 100%;
+}
