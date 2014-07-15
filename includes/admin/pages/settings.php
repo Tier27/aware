@@ -21,12 +21,12 @@
       <input type="radio" name="aware-development-mode" value="0"<?php if( get_option('aware_development_mode') == 0 ) echo "checked=\"checked\"";?> ><label>Off</label>
     </div>
   </div>
-</div> <!--/.row-->
-<input name="aware-update-settings" class="button radius tiny" value="Update">
-<input name="action" value="admin_update_settings" style="display: none;">
+  <input name="aware-update-settings" class="button radius tiny" value="Update">
+  <input name="action" value="admin_update_settings" style="display: none;">
   <div class="row">
     <div class="large-12 columns response hidden">
     </div>
   </div>
+</div> <!--/.row-->
 </form>
 

@@ -7,31 +7,8 @@
 </head>
  
 <div id="aware">
-<nav class="top-bar" data-topbar>
-  <ul class="title-area">     
-    <li class="name">
-      <h1><a href="#">Client Update</a></h1>
-    </li>
-    <li class="toggle-topbar menu-icon"><a href="#"><span>menu</span></a></li>
-  </ul>
 
-  <?php get_template_part('client-nav'); ?>
-
-</nav>
- 
 <br>
-
-
-<div class="row">
-  <dl class="sub-nav aware-thread-toolbar">
-      <dt>Tools:</dt>
-      <dd><a><i class="fa fa-tasks"></i> Forum</a></dd>
-      <dd><a><i class="fa fa-refresh"></i> Refresh</a></dd>
-      <dd><a><i class="fa fa-pencil"></i> Create</a></dd>
-      <dd><a><i class="fa fa-search"></i> Search</a></dd>
-      <dd><a><i class="fa fa-cog"></i> Settings</a></dd>
-    </dl>
-</div> <!--/.row-->
 
 <form id="aware-create-thread">
 <div class="row collapse">

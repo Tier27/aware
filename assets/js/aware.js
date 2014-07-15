@@ -4,7 +4,6 @@ jQuery(function($){
 
 	$('input[name="aware-create-communication"]').click(function(){
 
-		//$.post(ajaxurl, { action: 'my_action', whatever: '10' }, function(res) {
 		var $form = $(this).closest('form');
 		$.post(ajaxurl, $form.serialize(), function(res) {
 			console.log(res);

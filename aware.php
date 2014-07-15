@@ -225,7 +225,8 @@ function admin_get_projects ( $args = array() ) {
 ************************************************/
 
 function aware_event_part() { ?>
-      <?php $events = aware_get_ai1ec_events(); ?>
+      <?php //$events = aware_get_ai1ec_events(); ?>
+      <?php $events = admin_get_events(); ?>
       <div class="large-12 medium-12 small-12 columns panel section">
         <h3><i class="fa fa-calendar"></i> Calendar</h3><hr>
 	<?php foreach( $events as $event ) : ?>
@@ -310,30 +311,29 @@ function aware_accordion_part( $dt ) {
 			break;
 	}
 ?>
-
-      <div class="large-12 medium-12 small-12 columns panel section">
-        <h3><i class="fa fa-space-shuttle"></i> Clients</h3><hr>
-        <dl class="accordion" data-accordion>
+        <div class="large-12 medium-12 small-12 columns panel section">
+          <h3><i class="fa fa-space-shuttle"></i> Clients</h3><hr>
+          <dl class="accordion" data-accordion>
 <?php
 	foreach( $data as $datum ) :
 ?>
-  <dd class="accordion-navigation">
-    <a href="#client-<?php echo $datum->ID; ?>"><?php echo get_avatar( $datum->ID ); ?> <?php echo $datum->display_name; ?></a>
-    <div id="client-<?php echo $datum->ID; ?>" class="content">
-	<?php aware_accordion_part_form( $datum ); ?>
-    </div>
-  </dd>
+	  <dd class="accordion-navigation">
+	    <a href="#client-<?php echo $datum->ID; ?>"><?php echo get_avatar( $datum->ID ); ?> <?php echo $datum->display_name; ?></a>
+	    <div id="client-<?php echo $datum->ID; ?>" class="content">
+	      <?php aware_accordion_part_form( $datum ); ?>
+	    </div>
+	  </dd>
 <?php
 	endforeach;
 ?>
-  <dd class="accordion-navigation">
-    <a href="#client-new"><i class="fa fa-plus"></i> Add new</a>
-    <div id="client-new" class="content">
-      <?php aware_accordion_part_form( null, 'add' ); ?>
-    </div>
-  </dd>
-        </dl>
-      </div>
+	  <dd class="accordion-navigation">
+	    <a href="#client-new"><i class="fa fa-plus"></i> Add new</a>
+	    <div id="client-new" class="content">
+	      <?php aware_accordion_part_form( null, 'add' ); ?>
+	    </div>
+	  </dd>
+          </dl>
+        </div>
 <?php
 }
 
@@ -464,6 +464,9 @@ function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { ?>
       <input name="action" value="admin_<?php echo $action; ?>_client" class="hidden">
       <input name="aware-<?php echo $action; ?>-client" class="button radius tiny" value="<?php echo ucfirst($action); ?> client">
       <?php if( $action == 'update' ) : ?><input name="aware-delete-client" class="red button radius tiny" value="Delete client"><?php endif; ?>
+      <?php if( $action == 'update' ) : ?>
+	<input name="aware-view-client-dashboard" class="orange button radius tiny" value="View Client Dashboard">
+      <?php endif; ?>
     </div>
   </div>
   <div class="row">
