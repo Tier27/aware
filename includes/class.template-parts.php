@@ -137,16 +137,17 @@ class AWARETemplateParts {
 	?>
       </div> <!--/.aware-widget-section-->
     <?php if( !$full_page ) : ?>
-    <a href="<?php echo site_url('client/events'); ?>" class="right">See All Events »</a>
+    <a href="<?php echo site_url('client/events/' . $client->ID); ?>" class="right">See All Events »</a>
     <?php endif; ?>
   </div> <!--/.section-->
 
 	<?php }
 
-	public function dashboard_projects( $client ) { global $retrieve;
+	public function dashboard_projects( $client, $limit = -1, $full_page = false ) { global $retrieve;
 
-		$args = array( 'meta_key' => 'client', 'meta_value' => $client->ID );
+		//$args = array( 'meta_key' => 'client', 'meta_value' => $client->ID );
 		$projects = $retrieve->projects( $args );
+		$client_projects = get_user_meta( $client->ID, 'projects' );
 ?>
   <div class="small-12 columns panel section">
     <h3><i class="fa fa-calendar"></i> Projects</h3><hr>
@@ -154,14 +155,19 @@ class AWARETemplateParts {
       <div class="aware-widget-section">
 	<?php
 	foreach( $projects as $project ) : 
+	if( in_array( $project->ID, $client_projects ) ) :
 	?>
           <div class="panel">
             <h6><a href="<?php echo $project->guid; ?>"><?php echo $project->post_title; ?></a></h6>
           </div> <!--/.panel-->
 	<?php
+	endif;
 	endforeach; 
 	?>
       </div> <!--/.aware-widget-section-->
+    <?php if( !$full_page ) : ?>
+    <a href="<?php echo site_url('client/projects/' . $client->ID); ?>" class="right">See All Projects »</a>
+    <?php endif; ?>
   </div> <!--/.section-->
 
 	<?php }
@@ -190,7 +196,7 @@ class AWARETemplateParts {
       </div> <!--/.aware-widget-section-->
 
     <?php if( !$full_page ) : ?>
-    <a href="updates" class="right">See All Updates »</a>
+    <a href="<?php echo site_url('client/updates/' . $client->ID); ?>" class="right">See All Updates »</a>
     <?php endif; ?>
   </div> <!--/.section-->
 	
@@ -223,7 +229,7 @@ class AWARETemplateParts {
       </div> <!--/.aware-widget-section-->
 
     <?php if( !$full_page ) : ?>
-    <a href="conversations" class="right">See All Conversations »</a>
+    <a href="<?php echo site_url('client/conversations/' . $client->ID); ?>" class="right">See All Conversations »</a>
     <?php endif; ?>
   </div> <!--/.section-->
 	

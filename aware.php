@@ -146,7 +146,6 @@ function aware_save_manager_field( $user_id ) {
 }
 
 add_action( 'wp_ajax_admin_update_client', 'admin_update_client' );
-
 function admin_update_client() {
 	$args = array( 
 		'ID' => $_POST['ID'], 
@@ -166,7 +165,9 @@ function admin_update_client() {
 		endif;
 	endforeach;
 
-	update_user_meta( $user_id, 'projects', $_POST['projects'] );
+	//update_user_meta( $user_id, 'projects', $_POST['projects'] );
+	delete_user_meta( $user_id, 'projects' );
+	foreach( $_POST['projects'] as $project ) add_user_meta( $user_id, 'projects', $project );
 
 	//Move this 
 	foreach( $_POST['projects'] as $project_id ) add_client_to_project( $user_id, $project_id );

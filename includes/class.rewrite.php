@@ -18,6 +18,11 @@ class AWARERewrite {
 			'index.php?pagename=client&aware_type=$matches[1]',
 			'top'
 		);
+		add_rewrite_rule(
+			'^client/([^/]*)/([0-9]+)/?$',
+			'index.php?pagename=client&aware_type=$matches[1]&client_id=$matches[2]',
+			'top'
+		);
 		//flush_rewrite_rules(false);
 	}
 
