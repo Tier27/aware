@@ -182,7 +182,7 @@ function aware_accordion_part_events() { global $retrieve;
 
 function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { global $retrieve; ?>
 <?php if( $obj != NULL ) $meta = get_user_meta( $obj->ID ); ?>
-<form method="post" action="<?php echo site_url('client/' . $client->ID); ?>">
+<form method="post" action="<?php echo site_url('client/' . $obj->ID); ?>">
   <div class="row">
     <div class="large-6 columns">
       <label>First name
