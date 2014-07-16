@@ -15,7 +15,7 @@ class AWARETemplateParts {
 </div> <!--/.row-->
 	<?php } 
 
-	public function client_nav() { ?>
+	public function client_nav() { global $retrieve; ?>
   <section class="top-bar-section">
     
     <ul class="right">
@@ -43,7 +43,7 @@ class AWARETemplateParts {
           <li><a href="<?php echo site_url( 'client/message' ); ?>">Start conversation</a></li>
           <li class="divider"></li>
           <?php $args = array( 'author' => get_current_user_id() ); ?>
-          <?php foreach( client_get_threads( $args ) as $thread ) : ?>
+          <?php foreach( $retrieve->threads( $args ) as $thread ) : ?>
           <li><a href="<?php echo get_the_permalink( $thread->ID ); ?>"><?php echo $thread->post_title; ?></a></li>
 	  <?php endforeach; ?>
           <li class="divider"></li>
@@ -70,7 +70,7 @@ class AWARETemplateParts {
 </nav>
 	<?php }
 
-	public function admin_nav() { ?>
+	public function admin_nav() { global $retrieve; ?>
   <section class="top-bar-section">
     
     <ul class="right">
@@ -96,7 +96,7 @@ class AWARETemplateParts {
           <li><a href="<?php echo site_url( 'client/message' ); ?>">Start conversation</a></li>
           <li class="divider"></li>
           <?php $args = array( 'author' => get_current_user_id() ); ?>
-          <?php foreach( client_get_threads( $args ) as $thread ) : ?>
+          <?php foreach( $retrieve->threads( $args ) as $thread ) : ?>
           <li><a href="<?php echo get_the_permalink( $thread->ID ); ?>"><?php echo $thread->post_title; ?></a></li>
 	  <?php endforeach; ?>
           <li class="divider"></li>
@@ -109,10 +109,10 @@ class AWARETemplateParts {
   </section>
 	<?php }
 
-	function dashboard_events( $client, $limit = -1, $full_page = false ) {
+	public function dashboard_events( $client, $limit = -1, $full_page = false ) { global $retrieve;
 
-	$args = array( 'meta_key' => 'client', 'meta_value' => $client->ID );
-	$events = admin_get_events( $args );
+		$args = array( 'meta_key' => 'client', 'meta_value' => $client->ID );
+		$events = $retrieve->events( $args );
 ?>
   <div class="small-12 columns panel section">
     <h3><i class="fa fa-calendar"></i> Events</h3><hr>
@@ -137,16 +137,16 @@ class AWARETemplateParts {
 	?>
       </div> <!--/.aware-widget-section-->
     <?php if( !$full_page ) : ?>
-    <a href="#" class="right">Go To Events »</a>
+    <a href="<?php echo site_url('client/events'); ?>" class="right">See All Events »</a>
     <?php endif; ?>
   </div> <!--/.section-->
 
 	<?php }
 
-	function dashboard_projects( $client ) {
+	public function dashboard_projects( $client ) { global $retrieve;
 
-	$args = array( 'meta_key' => 'client', 'meta_value' => $client->ID );
-	$projects = admin_get_projects( $args );
+		$args = array( 'meta_key' => 'client', 'meta_value' => $client->ID );
+		$projects = $retrieve->projects( $args );
 ?>
   <div class="small-12 columns panel section">
     <h3><i class="fa fa-calendar"></i> Projects</h3><hr>
@@ -166,4 +166,90 @@ class AWARETemplateParts {
 
 	<?php }
 
+	public function dashboard_updates( $client, $limit = -1, $full_page = false ) { global $retrieve; 
+
+		$args = array( 'client' => $client->ID );
+          	$threads = $retrieve->updates( $args );
+?>
+
+  <div class="small-12 columns panel section">
+    <h3><i class="fa fa-space-shuttle"></i> Updates</h3><hr>
+      <div class="aware-widget-section">
+        <h5><i class="fa fa-long-arrow-right"></i> Recent Updates</h5>
+          <?php
+		foreach( $threads as $thread ) :
+          ?>
+          <div class="panel">
+            <h6><a href="#"><?php echo $thread->post_title; ?></a></h6>
+            <p><?php echo $thread->post_content; ?></p>
+          </div> <!--/.panel-->
+
+	  <?php 
+		endforeach; 
+	  ?>
+      </div> <!--/.aware-widget-section-->
+
+    <?php if( !$full_page ) : ?>
+    <a href="updates" class="right">See All Updates »</a>
+    <?php endif; ?>
+  </div> <!--/.section-->
+	
+	<?php }
+
+	public function dashboard_conversations( $client, $limit = -1, $full_page = false ) { global $retrieve; 
+
+		$args = array( 
+			'client' => $client->ID,
+			'posts_per_page' => $limit,
+		);
+          	$threads = $retrieve->threads( $args );
+?>
+
+  <div class="small-12 columns panel section">
+    <h3><i class="fa fa-space-shuttle"></i> Conversations</h3><hr>
+      <div class="aware-widget-section">
+        <h5><i class="fa fa-long-arrow-right"></i> Recent Conversations</h5>
+          <?php
+		foreach( $threads as $thread ) :
+          ?>
+          <div class="panel">
+            <h6><a href="#"><?php echo $thread->post_title; ?></a></h6>
+            <p><?php echo $thread->post_content; ?></p>
+          </div> <!--/.panel-->
+
+	  <?php 
+		endforeach; 
+	  ?>
+      </div> <!--/.aware-widget-section-->
+
+    <?php if( !$full_page ) : ?>
+    <a href="conversations" class="right">See All Conversations »</a>
+    <?php endif; ?>
+  </div> <!--/.section-->
+	
+	<?php }
+
+	public function dashboard_communications( $client, $limit = -1, $full_page = false ) { global $retrieve; 
+
+?>
+  <div class="small-12 columns panel section">
+    <h3><i class="fa fa-comments"></i> Communication</h3><hr>
+      <div class="aware-widget-section">
+        <h5><i class="fa fa-long-arrow-right"></i> Discussions</h5>
+          <div class="panel aware-widget-communication-discussion">
+            <h6><img class="avatar" src="<?php echo AWARE_URL; ?>assets/img/avatar.png" alt="Avatar"> Ryan Douvlos</h6>
+            <p><i class="fa fa-mail-reply"></i>Hey, Josh.  You are looking at the last message you received by <a>Ryan</a></p>
+          </div> <!--/.panel-->
+
+          <div class="panel aware-widget-communication-discussion">
+            <h6><img class="avatar" src="<?php echo AWARE_URL; ?>assets/img/avatar.png" alt="Avatar"> Bob Graham</h6>
+            <p><i class="fa fa-mail-forward"></i>Hey, Josh.  You are looking at the last message you sent to <a>Bob</a></p>
+          </div> <!--/.panel-->
+
+      </div> <!--/.aware-widget-section-->
+
+    <a href="#" class="right">Go To Projects »</a>
+  </div> <!--/.section-->
+
+	<?php }
 }

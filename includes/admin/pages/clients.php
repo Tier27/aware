@@ -12,7 +12,6 @@
      
    <br>
 
-  <?php AWARETemplateParts::admin_nav(); ?>
   <?php aware_accordion_part('client'); ?>
  
 <script>

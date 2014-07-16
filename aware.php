@@ -25,106 +25,19 @@
  * @version 0.0.1
  */
 
-class AWARELoad {
+define( 'AWARE_PATH', plugin_dir_path( __FILE__ ) );
+define( 'AWARE_DIR_NAME', plugin_basename( dirname( __FILE__ ) ) );
+define( 'AWARE_BASE_NAME', plugin_basename( __FILE__ ) );
+define( 'AWARE_PATH', plugin_dir_path( __FILE__ ) );
+define( 'AWARE_URL', plugin_dir_url( __FILE__ ) );
 
-	public function __construct() {
-
-		$this->defineConstants();
-		$this->includes();
-		global $templates;
-		$templates = new AWARETemplateParts();
-
-	}
-
-	private static function defineConstants() {
-		define( 'AWARE_DIR_NAME', plugin_basename( dirname( __FILE__ ) ) );
-		define( 'AWARE_BASE_NAME', plugin_basename( __FILE__ ) );
-		define( 'AWARE_PATH', plugin_dir_path( __FILE__ ) );
-		define( 'AWARE_URL', plugin_dir_url( __FILE__ ) );
-	}
-
-	private static function includes() {
-
-		require_once AWARE_PATH . 'includes/class.template-parts.php'; 
-		require_once AWARE_PATH . 'includes/class.admin-parts.php'; 
-		require_once AWARE_PATH . 'includes/class.rewrite.php'; 
-		require_once AWARE_PATH . 'includes/admin/class.menu.php'; 
-		require_once AWARE_PATH . 'includes/admin/class.actions.php'; 
-		require_once AWARE_PATH . 'includes/admin/class.classes.php'; 
-
-	}
-
-}
+require_once AWARE_PATH . 'includes/class.load.php'; 
 
 $AWARELoad = new AWARELoad();
 
-
-add_action('init', 'register_css' );
-function register_css()
-{
-    wp_register_style( 'aware-admin', AWARE_URL . "assets/css/admin.css", array(), '0.0.1' );
-    wp_register_style( 'aware-admin-custom', AWARE_URL . "assets/css/custom-style.css", array(), '0.0.1' );
-    wp_register_style( 'aware-foundation', AWARE_URL . "assets/css/foundation.css", array(), '0.0.1' );
-    wp_register_style( 'aware-foundation-ui', AWARE_URL . "assets/css/ui.css", array(), '0.0.1' );
-}
-
-add_action('admin_print_styles', 'do_css' );
-function do_css()
-{
-    wp_enqueue_style('aware-admin');
-    wp_enqueue_style('aware-admin-custom');
-    if( $_GET['page'] == 'aware_dashboard' ) :
-	wp_enqueue_style('aware-foundation');
-	wp_enqueue_style('aware-foundation-ui');
-    endif;
-}
-
-add_action('admin_print_scripts', 'do_jslibs' );
-function do_jslibs()
-{
-    wp_enqueue_script('editor');
-    wp_enqueue_script( 'aware-main', AWARE_URL . 'assets/js/aware.js', array( 'jquery' ) );
-    wp_enqueue_script( 'aware-foundation', AWARE_URL . 'assets/js/foundation.min.js', array( 'jquery' ) );
-    wp_enqueue_script( 'aware-foundation-accordion', AWARE_URL . 'assets/js/foundation/foundation.accordion.js', array( 'jquery' ) );
-    wp_enqueue_script( 'aware-foundation-datepicker', AWARE_URL . 'assets/js/foundation/foundation-datepicker.js', array( 'jquery' ) );
-    add_action( 'admin_head', 'wp_tiny_mce' );
-}
-
-add_action('wp_enqueue_scripts', 'aware_enqueue_scripts');
-function aware_enqueue_scripts() {
-    wp_enqueue_script( 'aware-main', AWARE_URL . 'assets/js/aware.js', array( 'jquery' ) );
-}
-add_action('wp_head','pluginname_ajaxurl');
-function pluginname_ajaxurl() {
-?>
-<script type="text/javascript">
-var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
-</script>
-<?php
-}
-
-add_action( 'init', 'create_posttype' );
-function create_posttype() {
-	register_post_type( 'acme_product',
-		array(
-			'labels' => array(
-				'name' => __( 'Products' ),
-				'singular_name' => __( 'Product' )
-			),
-			'public' => true,
-			'has_archive' => true,
-			'rewrite' => array('slug' => 'products'),
-		)
-	);
-}
-
-function aware_action_wp_enqueue_scripts() {
-	wp_enqueue_style('aware-foundation');
-}
-//add_action( 'wp_enqueue_scripts', 'aware_action_wp_enqueue_scripts' );
+/*****************************/
 
 add_action( 'wp_ajax_client_create_thread', 'client_create_thread' );
-
 function client_create_thread() {
 
 	$post = array(
@@ -140,47 +53,7 @@ function client_create_thread() {
 	die(); // this is required to return a proper result
 }
 
-function client_get_threads ( $args = array() ) {
-
-	$basis = array(
-		'post_type'	=> 'conversation',
-		'post_status'	=> 'private',
-	);
-	$args = array_merge($basis, $args);
-	return get_posts( $args );
-
-}
-
-function client_get_updates ( $args = array() ) {
-
-	$basis = array(
-		'post_type'	=> 'update',
-		'post_status'	=> 'private',
-		'meta_key'	=> 'client',
-		'meta_value'	=> $args['client'],
-	);
-	$args = array_merge($basis, $args);
-	return get_posts( $args );
-
-}
-
-function admin_get_clients() {
-
-	$args = array( 'role' => 'client' );
-	if( get_option( 'aware_development_mode' ) == 1 ) $args['role'] = '';
-	return get_users( $args );
-
-}
-
-function admin_get_managers() {
-
-	$args = array( 'role' => 'manager' );
-	return get_users( $args );
-
-}
-
 add_action( 'wp_ajax_admin_create_update', 'admin_create_update' );
-
 function admin_create_update() {
 
 	$post = array(
@@ -203,114 +76,6 @@ function admin_create_update() {
 	die(); // this is required to return a proper result
 }
 
-function admin_get_events ( $args = array() ) {
-
-	$basis = array(
-		'post_type'	=> 'event',
-	);
-	$args = array_merge($basis, $args);
-	return get_posts( $args );
-
-}
-
-
-function admin_get_projects ( $args = array() ) {
-
-	$basis = array(
-		'post_type'	=> 'project',
-	);
-	
-	//We don't want to break the basis by passing the wrong data type into the merge
-	if( is_array( $args ) )
-		$args = array_merge($basis, $args);
-	else
-		$args = $basis;
-
-	return get_posts( $args );
-
-}
-
-function aware_get_ai1ec_events() {
-
-	global $wpdb;
-	return $wpdb->get_results("SELECT * FROM wp_ai1ec_events e JOIN wp_posts p ON e.post_id = p.ID");
-
-}
-
-function aware_get_pm_projects() {
-
-	global $wpdb;
-	return $wpdb->get_results("SELECT * FROM wp_posts p JOIN wp_postmeta pm ON p.ID = pm.post_id WHERE p.post_type='project'");
-
-}
-
-function aware_add_client_role() {
-
-        $result = add_role(
-            'client',
-            __( 'Client' ),
-            array(
-                'read'         => true,  // true allows this capability
-                'edit_posts'   => true,
-                'delete_posts' => false, // Use false to explicitly deny
-            )
-        );
-
-}
-
-add_action( 'init', 'aware_add_manager_role' );
-function aware_add_manager_role() {
-
-        $result = add_role(
-            'manager',
-            __( 'Manager' ),
-            array(
-                'read'         => true,  // true allows this capability
-                'edit_posts'   => true,
-                'delete_posts' => false, // Use false to explicitly deny
-            )
-        );
-
-}
-
-
-add_action( 'init', 'aware_conversation_init' );
-function aware_conversation_init() {
-	$labels = array(
-		'name'               => _x( 'Conversations', 'post type general name', 'aware' ),
-		'singular_name'      => _x( 'Conversation', 'post type singular name', 'aware' ),
-		'menu_name'          => _x( 'Conversations', 'admin menu', 'aware' ),
-		'name_admin_bar'     => _x( 'Conversation', 'add new on admin bar', 'aware' ),
-		'add_new'            => _x( 'Add New', 'book', 'aware' ),
-		'add_new_item'       => __( 'Add New Conversation', 'aware' ),
-		'new_item'           => __( 'New Conversation', 'aware' ),
-		'edit_item'          => __( 'Edit Conversation', 'aware' ),
-		'view_item'          => __( 'View Conversation', 'aware' ),
-		'all_items'          => __( 'All Conversations', 'aware' ),
-		'search_items'       => __( 'Search Conversations', 'aware' ),
-		'parent_item_colon'  => __( 'Parent Conversations:', 'aware' ),
-		'not_found'          => __( 'No conversations found.', 'aware' ),
-		'not_found_in_trash' => __( 'No conversations found in Trash.', 'aware' )
-	);
-
-	$args = array(
-		'labels'             => $labels,
-		'public'             => true,
-		'publicly_queryable' => true,
-		'show_ui'            => true,
-		'show_in_menu'       => false,
-		'query_var'          => true,
-		'rewrite'            => array( 'slug' => 'conversation' ),
-		'capability_type'    => 'post',
-		'has_archive'        => true,
-		'hierarchical'       => false,
-		'menu_position'      => null,
-		'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' )
-	);
-
-	register_post_type( 'conversation', $args );
-}
-
 function aware_the_title() {
 	$title = str_replace( 'Private:', '', get_the_title());
 	echo $title;
@@ -322,7 +87,7 @@ function aware_client_login_redirect() {
 
 function soi_login_redirect( $redirect_to, $request, $user  ) {
 	return ( is_array( $user->roles ) && in_array( 'client', $user->roles ) ) ? site_url('/client') : admin_url();
-} // end soi_login_redirect
+} 
 add_filter( 'login_redirect', 'soi_login_redirect', 10, 3 );
 
 
@@ -344,7 +109,9 @@ function admin_update_settings() {
 add_action( 'show_user_profile', 'aware_add_manager_field' );
 add_action( 'edit_user_profile', 'aware_add_manager_field' );
 
-function aware_add_manager_field( $user ) { ?>
+function aware_add_manager_field( $user ) { 
+
+	global $retrieve; ?>
 
 	<table class="form-table">
 
@@ -352,7 +119,7 @@ function aware_add_manager_field( $user ) { ?>
 			<th><label for="twitter">Manager</label></th>
 
 			<td>
-				<?php $managers = admin_get_managers(); ?>
+				<?php $managers = $retrieve->managers(); ?>
 				<?php $this_manager = get_usermeta( $user->ID, 'aware_manager' ); ?>
 				<select name="aware-manager" data-user="<?php echo $user->ID; ?>">
 					<option value="0">No manager</option>
@@ -437,32 +204,12 @@ function admin_add_client() {
 	die();
 }
 
-//Move this
-function add_client_to_project( $client_id, $project_id ) {
-	$clients = get_post_meta( $project_id, 'clients', true );
-	if( !is_array( $clients ) || !in_array($client_id, $clients) ) :
-		$clients[] = $client_id;
-		update_post_meta( $project_id, 'clients', $clients );
-	endif;
-}
-
-//This doesn't do anything
-function remove_client_from_project( $client_id, $project_id ) {
-	$clients = get_post_meta( $project_id, 'clients', true );
-	if( in_array($client_id, $clients) ) :
-		//$clients[] = $client_id;
-		update_post_meta( $project_id, 'clients', $clients );
-	endif;
-}
-
 add_action( 'wp_ajax_admin_delete_client', 'admin_delete_client' );
-
 function admin_delete_client() {
 	if( isset( $_POST['ID'] ) && !empty( $_POST['ID'] ) ) wp_delete_user( $_POST['ID'] );
 }
 
 add_action( 'wp_ajax_admin_update_project', 'admin_update_project' );
-
 function admin_update_project() {
 	$args = array( 
 		'ID' => $_POST['ID'], 
@@ -482,7 +229,6 @@ function admin_update_project() {
 }
 
 add_action( 'wp_ajax_admin_add_project', 'admin_add_project' );
-
 function admin_add_project() {
 	$args = array( 
 		'post_title' => $_POST['name'],
@@ -496,17 +242,8 @@ function admin_add_project() {
 	die();
 }
 
+
 add_action( 'wp_ajax_admin_delete_project', 'admin_delete_project' );
-
-//Move this
-function add_project_to_client( $project_id, $client_id ) {
-	$projects = get_post_meta( $client_id, 'projects', true );
-	if( !in_array($project_id, $projects) ) :
-		$projects[] = $project_id;
-		update_post_meta( $client_id, 'projects', $projects );
-	endif;
-}
-
 function admin_delete_project() {
 	if( isset( $_POST['ID'] ) && !empty( $_POST['ID'] ) ) wp_delete_post( $_POST['ID'] );
 }
@@ -558,34 +295,29 @@ function soft_is_admin() {
 	if( current_user_can( 'manage_options' ) ) return true;
 }
 
-
-/***************************
-**** Rewrite ***************
-***************************/
-add_action( 'init', 'aware_rewrites_init' );
-function aware_rewrites_init(){
-	add_rewrite_rule(
-        	'client/([0-9]+)/?$',
-	        'index.php?pagename=client&client_id=$matches[1]',
-	        'top' 
-	);
-	add_rewrite_rule(
-		'^client/([^/]*)/?$',
-	        'index.php?pagename=client&aware_type=$matches[1]',
-		'top'
-	);
-	//flush_rewrite_rules(false);
+//Move this
+function add_client_to_project( $client_id, $project_id ) {
+	$clients = get_post_meta( $project_id, 'clients', true );
+	if( !is_array( $clients ) || !in_array($client_id, $clients) ) :
+		$clients[] = $client_id;
+		update_post_meta( $project_id, 'clients', $clients );
+	endif;
 }
 
-
-add_filter( 'query_vars', 'aware_query_vars' );
-function aware_query_vars( $query_vars ){
-	$query_vars[] = 'client_id';
-	$query_vars[] = 'aware_type';
-	return $query_vars;
+//This doesn't do anything
+function remove_client_from_project( $client_id, $project_id ) {
+	$clients = get_post_meta( $project_id, 'clients', true );
+	if( in_array($client_id, $clients) ) :
+		//$clients[] = $client_id;
+		update_post_meta( $project_id, 'clients', $clients );
+	endif;
 }
 
-
-/***************************
-**** End Rewrite ***************
-***************************/
+//Move this
+function add_project_to_client( $project_id, $client_id ) {
+	$projects = get_post_meta( $client_id, 'projects', true );
+	if( !in_array($project_id, $projects) ) :
+		$projects[] = $project_id;
+		update_post_meta( $client_id, 'projects', $projects );
+	endif;
+}

@@ -13,7 +13,6 @@
      
    <br>
 
-  <?php //aware_project_part(); ?> 
   <?php aware_accordion_part_projects(); ?> 
  
 <script>

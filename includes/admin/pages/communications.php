@@ -18,7 +18,10 @@
     <h6>Subject</h6>
     <input type="text" name="title">
     <h6>Client</h6>
-    <?php $clients = admin_get_clients() ; ?>
+    <?php 
+	global $retrieve;
+	$clients = $retrieve->clients(); 
+	?>
     <select name="client">
     <?php foreach( $clients as $client ) : ?>
       <option value="<?php echo $client->ID; ?>"><?php echo $client->display_name; ?></option>

@@ -3,18 +3,18 @@
 <ul class="tabs" data-tab>
   <li class="tab-title active"><a href="#panel2-1">Clients</a></li>
   <li class="tab-title"><a href="#panel2-2">Projects</a></li>
-  <li class="tab-title"><a href="#panel2-3">Calendar</a></li>
+  <li class="tab-title"><a href="#panel2-3">Events</a></li>
   <li class="tab-title"><a href="#panel2-4">Communication</a></li>
 </ul>
 <div class="tabs-content">
   <div class="content active" id="panel2-1">
-            <?php aware_client_part(); ?>
+  	<?php aware_accordion_part('client'); ?>
   </div>
   <div class="content" id="panel2-2">
-            <?php aware_project_part(); ?>
+  	<?php aware_accordion_part_projects(); ?> 
   </div>
   <div class="content" id="panel2-3">
-            <?php aware_event_part(); ?>
+ 	<?php aware_accordion_part_events(); ?> 
   </div>
   <div class="content" id="panel2-4">
             <?php aware_communication_part(); ?>

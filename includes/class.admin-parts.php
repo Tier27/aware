@@ -3,9 +3,8 @@
 ********Template Parts **************************
 ************************************************/
 
-function aware_event_part() { ?>
-      <?php //$events = aware_get_ai1ec_events(); ?>
-      <?php $events = admin_get_events(); ?>
+function aware_event_part() { global $retrieve; ?>
+      <?php $events = $retrieve->events(); ?>
       <div class="large-12 medium-12 small-12 columns panel section">
 	<h3><i class="fa fa-calendar"></i> Calendar</h3><hr>
 	<?php foreach( $events as $event ) : ?>
@@ -50,10 +49,10 @@ function aware_project_part() { ?>
       </div>
 <?php }
 
-function aware_communication_part() { ?>
-      <?php $threads = client_get_threads(); ?>
+function aware_communication_part() { global $retrieve; ?>
+      <?php $threads = $retrieve->threads(); ?>
       <div class="large-12 small-12 columns panel section">
-	<h3><i class="fa fa-comments"></i> Communication</h3><hr>
+	<h3><i class="fa fa-comments"></i> Communications</h3><hr>
 	<?php foreach( $threads as $thread ) : ?>
 	<div class="panel communication-widget">
 	  <div class="communication-widget-avatar">
@@ -66,8 +65,8 @@ function aware_communication_part() { ?>
       </div>
 <?php } 
 
-function aware_client_part( $args = array( 'header' => false ) ) { ?>
-      <?php $clients = admin_get_clients(); ?>
+function aware_client_part( $args = array( 'header' => false ) ) { global $retrieve; ?>
+      <?php $clients = $retrieve->clients(); ?>
       <div class="large-12 medium-12 small-12 columns panel section">
 	<?php if( $args['header'] ) : ?>
 	<h3><i class="fa fa-space-shuttle"></i> Clients</h3><hr>
@@ -88,10 +87,10 @@ function aware_client_part( $args = array( 'header' => false ) ) { ?>
        </div>
 <?php }
 
-function aware_accordion_part( $dt ) {
+function aware_accordion_part( $dt ) { global $retrieve;
 	switch( $dt ) {
 		case 'client' :
-			$data = admin_get_clients();
+			$data = $retrieve->clients();
 			break;
 	}
 ?>
@@ -121,8 +120,8 @@ function aware_accordion_part( $dt ) {
 <?php
 }
 
-function aware_accordion_part_projects() {
-	$projects = admin_get_projects();
+function aware_accordion_part_projects() { global $retrieve;
+	$projects = $retrieve->projects();
 ?>
 
       <div class="large-12 medium-12 small-12 columns panel section">
@@ -151,8 +150,8 @@ function aware_accordion_part_projects() {
 <?php
 }
 
-function aware_accordion_part_events() {
-	$events = admin_get_events();
+function aware_accordion_part_events() { global $retrieve;
+	$events = $retrieve->events();
 ?>
 
       <div class="large-12 medium-12 small-12 columns panel section">
@@ -181,9 +180,9 @@ function aware_accordion_part_events() {
 <?php
 }
 
-function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { ?>
+function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { global $retrieve; ?>
 <?php if( $obj != NULL ) $meta = get_user_meta( $obj->ID ); ?>
-<form method="post" action="<?php echo site_url('client'); ?>">
+<form method="post" action="<?php echo site_url('client/' . $client->ID); ?>">
   <div class="row">
     <div class="large-6 columns">
       <label>First name
@@ -215,7 +214,7 @@ function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { ?>
   </div>
   <div class="row">
     <div class="large-12 columns">
-      <?php $managers = admin_get_managers(); ?>
+      <?php $managers = $retrieve->managers(); ?>
       <label>Manager
 	<select name="manager">
 	  <option value="0">No manager</option>
@@ -229,7 +228,7 @@ function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { ?>
   <div class="row">
     <div class="large-12 columns">
       <label>Projects</label>
-      <?php $projects = admin_get_projects(); ?>
+      <?php $projects = $retrieve->projects(); ?>
       <?php foreach( $projects as $project ) : ?>
       <input type="checkbox" name="projects[]" value="<?php echo $project->ID; ?>" <?php if( in_array( $project->ID, unserialize($meta["projects"][0])) ) echo "checked=\"checked\""; ?>><label for="checkbox1"><?php echo $project->post_title; ?></label>
       <?php endforeach; ?>
@@ -246,10 +245,10 @@ function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { ?>
     <div class="large-12 columns">
       <input name="ID" value="<?php echo $obj->ID; ?>" class="hidden">
       <input name="action" value="admin_<?php echo $action; ?>_client" class="hidden">
-      <input name="aware-<?php echo $action; ?>-client" class="button radius tiny" value="<?php echo ucfirst($action); ?> client">
-      <?php if( $action == 'update' ) : ?><input name="aware-delete-client" class="red button radius tiny" value="Delete client"><?php endif; ?>
+      <input name="aware-<?php echo $action; ?>-client" class="button radius" value="<?php echo ucfirst($action); ?> client">
+      <?php if( $action == 'update' ) : ?><input name="aware-delete-client" class="red button radius" value="Delete client"><?php endif; ?>
       <?php if( $action == 'update' ) : ?>
-	<input type="submit" name="aware-view-client-dashboard" class="orange button radius tiny" value="View Client Dashboard">
+	<input type="submit" name="aware-view-client-dashboard" class="orange button radius" value="View Client Dashboard">
       <?php endif; ?>
     </div>
   </div>
@@ -261,7 +260,7 @@ function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { ?>
 </form>
 <?php }
 
-function aware_accordion_part_project_form( $project = NULL, $action = 'update' ) { ?>
+function aware_accordion_part_project_form( $project = NULL, $action = 'update' ) { global $retrieve; ?>
 <form>
   <div class="row">
     <div class="large-6 columns">
@@ -272,7 +271,7 @@ function aware_accordion_part_project_form( $project = NULL, $action = 'update' 
   </div>
   <div class="row">
     <div class="large-12 columns">
-      <?php $clients = admin_get_clients(); ?>
+      <?php $clients = $retrieve->clients(); ?>
       <label>Client
 	<select name="client">
 	  <option value="0">No client</option>
@@ -317,7 +316,7 @@ function aware_accordion_part_project_form( $project = NULL, $action = 'update' 
 </form>
 <?php }
 
-function aware_accordion_part_event_form( $event = NULL, $action = 'update' ) { ?>
+function aware_accordion_part_event_form( $event = NULL, $action = 'update' ) { global $retrieve; ?>
 <?php
 //To handle the mess that is time conversion
 $time = ( $time = get_post_meta( $event->ID, 'start_time', true ) ) ? $time : time(); 
@@ -365,7 +364,7 @@ $time_suffix = date('A', $time);
   </div>
   <div class="row">
     <div class="large-12 columns">
-      <?php $clients = admin_get_clients(); ?>
+      <?php $clients = $retrieve->clients(); ?>
       <label>Client
 	<select name="client">
 	  <option value="0">No client</option>
@@ -380,7 +379,7 @@ $time_suffix = date('A', $time);
   <div class="row">
     <div class="large-12 columns">
       <label>Projects</label>
-      <?php $projects = admin_get_projects(); ?>
+      <?php $projects = $retrieve->projects(); ?>
       <?php foreach( $projects as $project ) : ?>
       <input type="checkbox" name="projects[]" value="<?php echo $project->ID; ?>" <?php if( in_array( $project->ID, get_post_meta( $event->ID, 'projects', true )) ) echo "checked=\"checked\""; ?>><label for="checkbox1"><?php echo $project->post_title; ?></label>
       <?php endforeach; ?>
