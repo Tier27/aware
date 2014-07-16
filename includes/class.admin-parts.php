@@ -230,7 +230,7 @@ function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { global $
       <label>Projects</label>
       <?php $projects = $retrieve->projects(); ?>
       <?php foreach( $projects as $project ) : ?>
-      <input type="checkbox" name="projects[]" value="<?php echo $project->ID; ?>" <?php if( in_array( $project->ID, unserialize($meta["projects"][0])) ) echo "checked=\"checked\""; ?>><label for="checkbox1"><?php echo $project->post_title; ?></label>
+      <input type="checkbox" name="projects[]" value="<?php echo $project->ID; ?>" <?php if( in_array( $project->ID, $meta["projects"]) ) echo "checked=\"checked\""; ?>><label for="checkbox1"><?php echo $project->post_title; ?></label>
       <?php endforeach; ?>
     </div>
   </div>
