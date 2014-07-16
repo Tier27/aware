@@ -1,6 +1,5 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="js/vendor/modernizr.js"></script>
 <ul class="tabs" data-tab>
   <li class="tab-title active"><a href="#panel2-1">Clients</a></li>
   <li class="tab-title"><a href="#panel2-2">Projects</a></li>

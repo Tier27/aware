@@ -63,18 +63,8 @@ class AWAREAdminMenu {
 		$submenu[20]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Clients', 'menu_title' => __( 'Clients', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_clients', 'function' => array( __CLASS__, 'showPage' ) );
 		$submenu[40]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Projects', 'menu_title' => __( 'Projects', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_projects', 'function' => array( __CLASS__, 'showPage' ) );
 		$submenu[60]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Events', 'menu_title' => __( 'Events', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_events', 'function' => array( __CLASS__, 'showPage' ) );
-		$submenu[80]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Updates', 'menu_title' => __( 'Updates', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_updates', 'function' => array( __CLASS__, 'showPage' ) );
+		$submenu[80]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Communications', 'menu_title' => __( 'Communications', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_communications', 'function' => array( __CLASS__, 'showPage' ) );
 		$submenu[100]  = array( 'hook' => 'settings', 'page_title' => 'Settings', 'menu_title' => 'Settings', 'capability' => 'manage_options', 'menu_slug' => 'aware_settings', 'function' => array( __CLASS__, 'showPage' ) );
-/*
-		$submenu[60]  = array( 'hook' => 'categories', 'page_title' => 'Connections : ' . __( 'Categories', 'connections' ), 'menu_title' => __( 'Categories', 'connections' ), 'capability' => 'connections_edit_categories', 'menu_slug' => 'connections_categories', 'function' => array( __CLASS__, 'showPage' ) );
-		$submenu[80]  = array( 'hook' => 'templates', 'page_title' => 'Connections : ' . __( 'Templates', 'connections' ), 'menu_title' => __( 'Templates', 'connections' ), 'capability' => 'connections_manage_template', 'menu_slug' => 'connections_templates', 'function' => array( __CLASS__, 'showPage' ) );
-		$submenu[100] = array( 'hook' => 'settings', 'page_title' => 'Connections : ' . __( 'Settings', 'connections' ), 'menu_title' => __( 'Settings', 'connections' ), 'capability' => 'connections_change_settings', 'menu_slug' => 'connections_settings', 'function' => array( __CLASS__, 'showPage' ) );
-		$submenu[120] = array( 'hook' => 'roles', 'page_title' => 'Connections : ' . __( 'Roles &amp; Capabilites', 'connections' ), 'menu_title' => __( 'Roles', 'connections' ), 'capability' => 'connections_change_roles', 'menu_slug' => 'connections_roles', 'function' => array( __CLASS__, 'showPage' ) );
-*/
-
-		//$submenu = apply_filters( 'cn_submenu', $submenu );
-
-		//ksort( $submenu );
 
 		foreach ( $submenu as $menu ) {
 
@@ -114,8 +104,8 @@ class AWAREAdminMenu {
 				include_once AWARE_PATH . 'includes/admin/pages/events.php';
 				break;
 
-			case 'aware_updates':
-				include_once AWARE_PATH . 'includes/admin/pages/updates.php';
+			case 'aware_communications':
+				include_once AWARE_PATH . 'includes/admin/pages/communications.php';
 				break;
 
 			case 'aware_settings':
