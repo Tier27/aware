@@ -248,7 +248,8 @@ function aware_accordion_part_form( $obj = NULL, $action = 'update' ) { global $
       <input name="aware-<?php echo $action; ?>-client" class="button radius" value="<?php echo ucfirst($action); ?> client">
       <?php if( $action == 'update' ) : ?><input name="aware-delete-client" class="red button radius" value="Delete client"><?php endif; ?>
       <?php if( $action == 'update' ) : ?>
-	<input type="submit" name="aware-view-client-dashboard" class="orange button radius" value="View Client Dashboard">
+	<!--<input type="submit" name="aware-view-client-dashboard" class="orange button radius" value="View Client Dashboard">-->
+	<a href="<?php echo site_url('client/' . $obj->ID); ?>" class="button radius">View Client Dashboard</a>
       <?php endif; ?>
     </div>
   </div>
