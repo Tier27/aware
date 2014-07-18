@@ -1,34 +1,39 @@
 <?php
+namespace aware;
 
-class AWARELoad {
+class load {
+
+	public $templates;
+	public $retrieve;
+	public $ajax;
+	public $rewrite;
 
 	public function __construct() {
 
 		$this->includes();
-		$this->rewrite();
 		$this->actions();
 		global $templates;
 		global $retrieve;
-		$templates = new AWARETemplateParts();
-		$retrieve = new AWARERetrieve();
+		$templates = new templates();
+		$retrieve = new retrieve();
+		$ajax = new ajax();
+		$rewrite = new rewrite();
+		$api = new api();
 
 	}
 
 	private static function includes() {
 
-		require_once AWARE_PATH . 'includes/class.template-parts.php'; 
-		require_once AWARE_PATH . 'includes/class.admin-parts.php'; 
-		require_once AWARE_PATH . 'includes/class.rewrite.php'; 
+		require_once AWARE_PATH . 'includes/class.templates.php'; 
+		require_once AWARE_PATH . 'includes/admin/class.parts.php'; 
 		require_once AWARE_PATH . 'includes/class.retrieve.php'; 
+		require_once AWARE_PATH . 'includes/class.ajax.php'; 
+		require_once AWARE_PATH . 'includes/class.rewrite.php'; 
+		require_once AWARE_PATH . 'includes/class.api.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.menu.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.actions.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.classes.php'; 
-
-	}
-
-	public function rewrite() {
-	
-		$rewrite = new AWARERewrite();
+		require_once AWARE_PATH . 'includes/admin/class.capabilities.php'; 
 
 	}
 

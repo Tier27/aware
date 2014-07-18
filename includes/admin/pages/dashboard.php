@@ -1,3 +1,4 @@
+<?php namespace aware; ?>    
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 <ul class="tabs" data-tab>
@@ -8,16 +9,16 @@
 </ul>
 <div class="tabs-content">
   <div class="content active" id="panel2-1">
-  	<?php aware_accordion_part('client'); ?>
+  	<?php parts::accordion_clients(); ?>
   </div>
   <div class="content" id="panel2-2">
-  	<?php aware_accordion_part_projects(); ?> 
+  	<?php parts::accordion_projects(); ?> 
   </div>
   <div class="content" id="panel2-3">
- 	<?php aware_accordion_part_events(); ?> 
+ 	<?php parts::accordion_events(); ?> 
   </div>
   <div class="content" id="panel2-4">
-            <?php aware_communication_part(); ?>
+            <?php parts::communication(); ?>
   </div>
 </div>
 <div class="row">

@@ -6,14 +6,23 @@ jQuery(function($){
 
 		var $form = $(this).closest('form');
 		$.post(ajaxurl, $form.serialize(), function(res) {
-			console.log(res);
 			local_data = $.parseJSON(res);
-			$form.slideUp(function(){
-				global_data.email_data = local_data;
-				console.log(res);
-				if( local_data.action == 'redirect' ) window.location.href = local_data.location;
-				if( typeof(local_data.response) != 'undefined' ) $('#submission-response').html($('<h3></h3>').html("Thank you! Your request has been handled successfully")).slideDown();
-			});
+			global_data.email_data = local_data;
+			console.log(res);
+			if( local_data.action == 'redirect' ) window.location.href = local_data.location;
+			if( typeof(local_data.response) != 'undefined' ) $form.find('.response').html("Your message has been posted successfully").show();
+		});
+
+	});
+
+	$('input[name="aware-post-reply"]').click(function(){
+
+		var $form = $(this).closest('form');
+		$.post(ajaxurl, $form.serialize(), function(res) {
+			local_data = $.parseJSON(res);
+			global_data.email_data = local_data;
+			console.log(res);
+			location.reload();
 		});
 
 	});
@@ -22,7 +31,6 @@ jQuery(function($){
 		var $form = $(this).closest('form');
 		$form.find('.response').html('Updating settings...').show();
 		$.post(ajaxurl, $form.serialize(), function(res) {
-			//alert(res);
 			$form.find('.response').html('Settings updated.').show();
 			console.log(res);
 		});

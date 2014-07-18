@@ -1,3 +1,4 @@
+<?php namespace aware; ?>
 <head>
     <link type="text/css" rel="stylesheet" href="<?php echo AWARE_URL; ?>assets/css/foundation.css">
     <link type="text/css" rel="stylesheet" href="<?php echo AWARE_URL; ?>assets/css/custom-style.css">
@@ -8,62 +9,19 @@
  
 <div id="aware">
 
-<br>
+<ul class="tabs" data-tab>
+  <li class="tab-title active"><a href="#panel2-1">Conversations</a></li>
+  <li class="tab-title"><a href="#panel2-2">Updates</a></li>
+</ul>
 
-<form id="aware-create-thread">
-<div class="row collapse">
-  <div class="small-12 medium-10 columns">
-    <h3>Create Update</h3>
-
-    <h6>Subject</h6>
-    <input type="text" name="title">
-    <h6>Client</h6>
-    <?php 
-	global $retrieve;
-	$clients = $retrieve->clients(); 
-	?>
-    <select name="client">
-    <?php foreach( $clients as $client ) : ?>
-      <option value="<?php echo $client->ID; ?>"><?php echo $client->display_name; ?></option>
-    <?php endforeach; ?>
-    </select>
+<div class="tabs-content">
+  <div class="content active" id="panel2-1">
+	<?php templates::thread_box(); ?>
   </div>
-</div> <!--/.row-->
-
-<div class="row">
-  <!--Communication Section--> 
-  <div class="small-12 medium-10 columns panel section">
-      <div class="aware-widget-section">
-        
-
-        <div class="button-bar aware-thread-comment-tools">
-          <ul class="button-group">
-            <li><a href="#" class="small button"><i class="fa fa-bold"></i></a></li>
-            <li><a href="#" class="small button"><i class="fa fa-italic"></i></a></li>
-            <li><a href="#" class="small button"><i class="fa fa-link"></i></a></li>
-            <li><a href="#" class="small button"><i class="fa fa-strikethrough"></i></a></li>
-            <li><a href="#" class="small button"><i class="fa fa-underline"></i></a></li>
-            <li><a href="#" class="small button"><i class="fa fa-picture-o"></i></a></li>
-            <li><a href="#" class="small button">Color</a></li>
-            <li><a href="#" class="small button">Large</a></li>
-            <li><a href="#" class="small button">Small</a></li>
-          </ul>
-        </div>
-
-          <div class="panel aware-widget-communication-discussion">
-            <textarea rows="7" name="content"></textarea>
-          </div> <!--/.panel-->
-
-        <input name="aware-create-communication" class="button radius tiny" value="Post update">
-        <input name="aware-cancel-communication" class="button radius tiny alert" value="Cancel">
-	<input name="action" value="admin_create_update" style="display: none;">
-
-      </div> <!--/.aware-widget-section-->
-  </div> <!--/.section-->
-
-
-</div> <!--/.row-->
-</form>
+  <div class="content" id="panel2-2">
+	<?php templates::update_box(); ?>
+  </div>
+</div>
 <div id="submission-response"></div>
 
 </div> <!--/#aware-->

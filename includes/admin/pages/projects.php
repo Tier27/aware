@@ -1,4 +1,4 @@
-    
+<?php namespace aware; ?>    
 <head>
     <link type="text/css" rel="stylesheet" href="<?php echo AWARE_URL; ?>assets/css/foundation.css">
     <link type="text/css" rel="stylesheet" href="<?php echo AWARE_URL; ?>assets/css/ui.css">
@@ -13,7 +13,7 @@
      
    <br>
 
-  <?php aware_accordion_part_projects(); ?> 
+  <?php parts::accordion_projects(); ?> 
  
 <script>
 jQuery(document).foundation({

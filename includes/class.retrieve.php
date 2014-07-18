@@ -1,6 +1,7 @@
 <?php
+namespace aware;
 
-class AWARERetrieve {
+class retrieve {
 
 	public function events ( $args = array() ) {
 
@@ -19,6 +20,10 @@ class AWARERetrieve {
 			'post_status'	=> 'private',
 			'posts_per_page' => $args['posts_per_page'],
 		);
+		if( $args['client'] ) :
+			$basis['meta_key'] = 'client';
+			$basis['meta_value'] = $args['client'];
+		endif;
 		$args = array_merge($basis, $args);
 		return get_posts( $args );
 
@@ -80,6 +85,17 @@ class AWARERetrieve {
 		global $wpdb;
 		return $wpdb->get_results("SELECT * FROM wp_posts p JOIN wp_postmeta pm ON p.ID = pm.post_id WHERE p.post_type='project'");
 
+	}
+
+	public function client_events( $client_id ) {
+		global $wpdb;
+		$events = $wpdb->get_results("SELECT p.* FROM wp_posts p JOIN wp_postmeta pm JOIN wp_usermeta um ON pm.post_id=um.meta_value AND p.ID=pm.meta_value WHERE um.user_id=$client_id AND um.meta_key='projects' AND pm.meta_key='events' GROUP BY pm.meta_value;");
+		return $events;
+
+	}
+
+	public function replies( $parent ) {
+		return self::threads( array( 'post_parent' => $parent, 'posts_per_page' => -1 ) );		
 	}
 
 }
