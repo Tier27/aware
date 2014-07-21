@@ -14,6 +14,10 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 function awareShowRolesPage() {
+	$role = new \AWARERole();
+	$role->add( 'editor', 'aware_change_roles' );
+	$role->speak();
+	print_r( array('b'=>'o', 'o'=>'b') );
 	/*
 	 * Check whether user can edit roles
 	 */
@@ -37,7 +41,7 @@ function awareShowRolesPage() {
 		$form = new cnFormObjects();
 
 ?>
-		<div class="wrap cn-roles">
+		<div class="wrap aw-roles">
 
 			<h2>Aware : <?php _e( 'Roles &amp; Capabilities', 'aware' ); ?></h2>
 
@@ -70,7 +74,7 @@ function awareShowRolesPage() {
 
 							<div id="major-publishing-actions">
 								<div id="publishing-action">
-									<input type="hidden" name="cn-action" value="update_role_capabilities"/>
+									<input type="hidden" name="aw-action" value="update_role_capabilities"/>
 									<input class="button-primary" type="submit" value="<?php _e( 'Update', 'connections' ); ?>" name="save" />
 								</div>
 								<div class="clear"></div>

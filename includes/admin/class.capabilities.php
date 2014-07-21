@@ -21,6 +21,12 @@ class AWARERole extends WP_Roles {
 	private static $instance;
 
 	/**
+	 * A radical function
+	*/
+	public function speak() {
+		echo "I am AWARERole";
+	}
+	/**
 	 * Main AWARERole Instance.
 	 *
 	 * Ensures that only one instance of cnRole exists at any one time.
@@ -80,6 +86,7 @@ class AWARERole extends WP_Roles {
 	 */
 	public static function add( $role, $cap, $grant = TRUE ) {
 
+		echo 'I am AWARERole, and I am adding a role';
 		// Bring a copy of this into scope.
 		$instance = self::getInstance();
 

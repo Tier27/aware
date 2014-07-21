@@ -35,6 +35,7 @@ class load {
 		require_once AWARE_PATH . 'includes/admin/class.actions.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.classes.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.capabilities.php'; 
+		require_once AWARE_PATH . 'includes/admin/class.actions.php'; 
 
 	}
 
@@ -46,6 +47,7 @@ class load {
 		add_action('wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ));
 		add_action('wp_head', array( __CLASS__, 'print_ajaxurl' ));
 		add_action('init', array( __CLASS__, 'conversations' ));
+		add_action('admin_init', array( __CLASS__, 'admin_actions' ));
 		//add_action('init', array( __CLASS__, 'roles' ));
 
 	}
@@ -146,6 +148,10 @@ class load {
 		);
 
 		register_post_type( 'conversation', $args );
+	}
+
+	public function admin_actions() {
+		actions::init();
 	}
 
 }
