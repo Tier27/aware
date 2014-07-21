@@ -52,7 +52,7 @@ class templates {
         </ul>
       </li>
       <li class="divider"></li>
-      <li><a href="<?php echo site_url( 'client' ); ?>"><?php echo get_avatar(); ?> Dasboard</a></li>
+      <li><a href="<?php echo site_url( 'client' ); ?>"><?php echo get_avatar(); ?> Dashboard</a></li>
     </ul>
   </section>
 	<?php }
@@ -105,7 +105,7 @@ class templates {
         </ul>
       </li>
       <li class="divider"></li>
-      <li><a href="<?php echo site_url( 'client' ); ?>"><?php echo get_avatar(); ?> Dasboard</a></li>
+      <li><a href="<?php echo site_url( 'client' ); ?>"><?php echo get_avatar(); ?> Dashboard</a></li>
     </ul>
   </section>
 	<?php }
