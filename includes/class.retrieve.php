@@ -29,6 +29,13 @@ class retrieve {
 
 	}
 
+	public function thread_families ( $args = array( 'posts_per_page' => -1 ) ) {
+		$families = array();
+		$threads = self::threads( $args );
+		foreach( $threads as $thread ) $families[$thread->ID] = $thread;
+		return $families;
+	}
+
 	public function updates ( $args = array() ) {
 
 		$basis = array(

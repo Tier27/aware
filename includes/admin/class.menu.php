@@ -65,6 +65,7 @@ class AWAREAdminMenu {
 		$submenu[60]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Events', 'menu_title' => __( 'Events', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_events', 'function' => array( __CLASS__, 'showPage' ) );
 		$submenu[80]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Communications', 'menu_title' => __( 'Communications', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_communications', 'function' => array( __CLASS__, 'showPage' ) );
 		$submenu[100]  = array( 'hook' => 'settings', 'page_title' => 'Settings', 'menu_title' => 'Settings', 'capability' => 'manage_options', 'menu_slug' => 'aware_settings', 'function' => array( __CLASS__, 'showPage' ) );
+		$submenu[120]  = array( 'hook' => 'roles', 'page_title' => 'Roles and Capabilities', 'menu_title' => 'Roles', 'capability' => 'manage_options', 'menu_slug' => 'aware_roles', 'function' => array( __CLASS__, 'showPage' ) );
 
 		foreach ( $submenu as $menu ) {
 
@@ -110,6 +111,11 @@ class AWAREAdminMenu {
 
 			case 'aware_settings':
 				include_once AWARE_PATH . 'includes/admin/pages/settings.php';
+				break;
+
+			case 'aware_roles':
+				include_once AWARE_PATH . 'includes/admin/pages/roles.php';
+				awareShowRolesPage();
 				break;
 
 			case 'connections_manage':

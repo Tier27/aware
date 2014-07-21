@@ -158,8 +158,11 @@ class ajax {
 			'post_name' => sanitize_title($_POST['name']),
 		);
 		$post_id = wp_update_post( $args );
-		$time = $_POST['start-date'] . ' ' . $_POST['start-hour'] . ':' . $_POST['start-minute'] . ':00' . $_POST['start-suffix'];
-		update_post_meta( $post_id, 'start_time', strtotime($time) );
+		$start_time = $_POST['start-date'] . ' ' . $_POST['start-hour'] . ':' . $_POST['start-minute'] . ':00' . $_POST['start-suffix'];
+		$end_time = $_POST['end-date'] . ' ' . $_POST['end-hour'] . ':' . $_POST['end-minute'] . ':00' . $_POST['end-suffix'];
+		update_post_meta( $post_id, 'start_time', strtotime($start_time) );
+		update_post_meta( $post_id, 'end_time', strtotime($end_time) );
+		update_post_meta( $post_id, 'details', $_POST['details'] );
 		update_post_meta( $post_id, 'notes', $_POST['notes'] );
 		//update_post_meta( $post_id, 'client', $_POST['client'] );
 		$projects = retrieve::projects();
@@ -178,10 +181,14 @@ class ajax {
 			'post_status' => 'publish'
 		);
 		$post_id = wp_insert_post( $args );
-		$time = $_POST['start-date'] . ' ' . $_POST['start-hour'] . ':' . $_POST['start-minute'] . ':00' . $_POST['start-suffix'];
-		update_post_meta( $post_id, 'start_time', strtotime($time) );
+		$start_time = $_POST['start-date'] . ' ' . $_POST['start-hour'] . ':' . $_POST['start-minute'] . ':00' . $_POST['start-suffix'];
+		$end_time = $_POST['end-date'] . ' ' . $_POST['end-hour'] . ':' . $_POST['end-minute'] . ':00' . $_POST['end-suffix'];
+		update_post_meta( $post_id, 'start_time', strtotime($start_time) );
+		update_post_meta( $post_id, 'end_time', strtotime($end_time) );
+		update_post_meta( $post_id, 'details', $_POST['details'] );
 		update_post_meta( $post_id, 'notes', $_POST['notes'] );
 		//update_post_meta( $post_id, 'client', $_POST['client'] );
+                foreach( $_POST['projects'] as $project ) add_post_meta( $project, 'events', $post_id );
 		update_post_meta( $post_id, 'projects', $_POST['projects'] );
 		echo $post_id;
 		die();

@@ -30,6 +30,7 @@ class load {
 		require_once AWARE_PATH . 'includes/class.ajax.php'; 
 		require_once AWARE_PATH . 'includes/class.rewrite.php'; 
 		require_once AWARE_PATH . 'includes/class.api.php'; 
+		require_once AWARE_PATH . 'includes/class.form.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.menu.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.actions.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.classes.php'; 

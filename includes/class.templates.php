@@ -119,14 +119,6 @@ class templates {
   <div class="small-12 columns panel section">
     <h3><i class="fa fa-calendar"></i> Events</h3><hr>
       <div class="aware-widget-section">
-
-<!--
-        <h5><i class="fa fa-long-arrow-right"></i> External Calendar View</h5>
-          <img class="widget-image" src="<?php echo AWARE_URL; ?>assets/img/eventon-full.jpg" alt="event on full">
--->
-      </div> <!--/.aware-widget-section-->
-
-      <div class="aware-widget-section">
         <h5><i class="fa fa-long-arrow-right"></i> Events</h5>
 	<?php
 	foreach( $events as $event ) : 
@@ -144,6 +136,34 @@ class templates {
   </div> <!--/.section-->
 
 	<?php }
+
+	public function dashboard_accordion_events() { global $retrieve;
+		$events = $retrieve->events();
+	?>
+
+	      <div class="large-12 medium-12 small-12 columns panel section">
+		<h3><i class="fa fa-space-shuttle"></i> Events</h3><hr>
+		<dl class="accordion" data-accordion>
+	<?php
+		foreach( $events as $event ) :
+	?>
+	  <dd class="accordion-navigation">
+	    <a href="#event-<?php echo $event->ID; ?>"><?php echo $event->post_title; ?></a>
+	    <div id="event-<?php echo $event->ID; ?>" class="content">
+		<?php self::accordion_event( $event ); ?>
+	    </div>
+	  </dd>
+	<?php
+		endforeach;
+	?>
+		</dl>
+		<br>
+    	<?php if( !$full_page ) : ?>
+	      <a href="<?php echo site_url('client/events/' . $client->ID); ?>" class="right">See All Events »</a>
+	<?php endif; ?>
+	      </div>
+	<?php
+	}
 
 	public function dashboard_projects( $client, $limit = -1, $full_page = false ) { global $retrieve;
 
@@ -173,6 +193,34 @@ class templates {
   </div> <!--/.section-->
 
 	<?php }
+
+	public function dashboard_accordion_projects() { global $retrieve;
+		$projects = $retrieve->projects();
+	?>
+
+	      <div class="large-12 medium-12 small-12 columns panel section">
+		<h3><i class="fa fa-space-shuttle"></i> Projects</h3><hr>
+		<dl class="accordion" data-accordion>
+	<?php
+		foreach( $projects as $project ) :
+	?>
+	  <dd class="accordion-navigation">
+	    <a href="#project-<?php echo $project->ID; ?>"><?php echo $project->post_title; ?></a>
+	    <div id="project-<?php echo $project->ID; ?>" class="content">
+		<?php self::accordion_project( $project ); ?>
+	    </div>
+	  </dd>
+	<?php
+		endforeach;
+	?>
+		</dl>
+		<br>
+    	<?php if( !$full_page ) : ?>
+	      <a href="<?php echo site_url('client/projects/' . $client->ID); ?>" class="right">See All Projects »</a>
+	<?php endif; ?>
+	      </div>
+	<?php
+	}
 
 	public function dashboard_updates( $client, $limit = -1, $full_page = false ) { global $retrieve; 
 
@@ -207,6 +255,40 @@ class templates {
 	
 	<?php }
 
+	public function dashboard_accordion_updates( $client, $limit = -1, $full_page = false ) { global $retrieve; 
+		$args = array( 
+			'client' => $client->ID,
+			'posts_per_page' => $limit,
+		 );
+		$updates = $retrieve->updates( $args );
+	?>
+
+	      <div class="large-12 medium-12 small-12 columns panel section">
+		<h3><i class="fa fa-space-shuttle"></i> Updates</h3><hr>
+		<dl class="accordion" data-accordion>
+	<?php
+		foreach( $updates as $update ) :
+	?>
+	  <dd class="accordion-navigation">
+	    <a href="#update-<?php echo $update->ID; ?>"><?php echo $update->post_title; ?>
+		<span class="pull-right"><?php echo date('m/d/Y, g:iA', strtotime($update->post_date)); ?></span>
+   	    </a>
+	    <div id="update-<?php echo $update->ID; ?>" class="content">
+		<?php self::accordion_update( $update ); ?>
+	    </div>
+	  </dd>
+	<?php
+		endforeach;
+	?>
+		</dl>
+		<br>
+    	<?php if( !$full_page ) : ?>
+	      <a href="<?php echo site_url('client/updates/' . $client->ID); ?>" class="right">See All Updates »</a>
+	<?php endif; ?>
+	      </div>
+	<?php
+	}
+
 	public function dashboard_conversations( $client, $limit = -1, $full_page = false ) { global $retrieve; 
 
 		$args = array( 
@@ -214,6 +296,7 @@ class templates {
 			'posts_per_page' => $limit,
 		);
           	$threads = $retrieve->threads( $args );
+		$thread_families = retrieve::thread_families( $args ); 
 ?>
 
   <div class="small-12 columns panel section">
@@ -221,10 +304,16 @@ class templates {
       <div class="aware-widget-section">
         <h5><i class="fa fa-long-arrow-right"></i> Recent Conversations</h5>
           <?php
-		foreach( $threads as $thread ) :
+		foreach( $thread_families as $thread ) :
+		$title = ( $thread->post_parent == 0 ) ? $thread->post_title : $thread_families[$thread->post_parent]->post_title;
+		$author = get_userdata( $thread->post_author );
           ?>
-          <div class="panel">
-            <h6><a href="#"><?php echo $thread->post_title; ?></a></h6>
+          <div class="panel aware-widget-communication-discussion">
+            <a href="<?php echo get_the_permalink( $thread->ID ); ?>"><?php echo $title; ?></a>
+	    <span class="pull-right"><?php echo date('m/d/Y, g:ia', strtotime($thread->post_date)); ?></span>
+	    <br>
+	    <br>
+            <h6><?php echo get_avatar( $thread->post_author ); ?> <?php echo $author->display_name; ?></h6>
             <p><?php echo $thread->post_content; ?></p>
           </div> <!--/.panel-->
 
@@ -446,4 +535,50 @@ class templates {
 </div> <!--/.row-->
 </form>
 	<?php }
+
+	public function accordion_event( $event = NULL, $action = 'update' ) { global $retrieve; ?>
+	<form>
+	  <div class="row">
+	    <div class="large-12 columns">
+		Starts <?php echo date('m/d/Y, g:iA', get_post_meta($event->ID, 'start_time', true)); ?>
+	    </div>
+	  </div>
+	  <div class="row">
+	    <div class="large-12 columns">
+		Ends <?php echo date('m/d/Y, g:iA', get_post_meta($event->ID, 'end_time', true)); ?>
+	    </div>
+	  </div>
+	  <div class="row">
+	    <div class="large-12 columns">
+		<p><?php echo get_post_meta( $event->ID, 'details', true ); ?></p>
+	    </div>
+	  </div>
+	  <div class="row">
+	    <div class="large-12 columns">
+		<p><?php echo get_post_meta( $event->ID, 'notes', true ); ?></p>
+	    </div>
+	  </div>
+	</form>
+	<?php }
+
+	public function accordion_project( $project = NULL, $action = 'update' ) { global $retrieve; ?>
+	<form>
+	  <div class="row">
+	    <div class="large-12 columns">
+		<p><?php echo get_post_meta( $project->ID, 'notes', true ); ?></p>
+	    </div>
+	  </div>
+	</form>
+	<?php }
+
+	public function accordion_update( $update = NULL, $action = 'update' ) { global $retrieve; ?>
+	<form>
+	  <div class="row">
+	    <div class="large-12 columns">
+		<p><?php echo $update->post_content; ?></p>
+	    </div>
+	  </div>
+	</form>
+	<?php }
+
 }

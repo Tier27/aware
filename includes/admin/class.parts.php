@@ -249,11 +249,16 @@ class parts {
 	public function accordion_form_event( $event = NULL, $action = 'update' ) { global $retrieve; ?>
 	<?php
 	//To handle the mess that is time conversion
-	$time = ( $time = get_post_meta( $event->ID, 'start_time', true ) ) ? $time : time(); 
-	$date = date('m/d/Y', $time);
-	$hour = date('g', $time);
-	$minute = date('i', $time);
-	$time_suffix = date('A', $time);
+	$start_time = ( $start_time = get_post_meta( $event->ID, 'start_time', true ) ) ? $start_time : time(); 
+	$start_date = date('m/d/Y', $start_time);
+	$start_hour = date('g', $start_time);
+	$start_minute = date('i', $start_time);
+	$start_time_suffix = date('A', $start_time);
+	$end_time = ( $end_time = get_post_meta( $event->ID, 'end_time', true ) ) ? $end_time : time(); 
+	$end_date = date('m/d/Y', $end_time);
+	$end_hour = date('g', $end_time);
+	$end_minute = date('i', $end_time);
+	$end_time_suffix = date('A', $end_time);
 	?>
 	<form>
 	  <div class="row">
@@ -266,48 +271,61 @@ class parts {
 	  <div class="row">
 	    <div class="large-6 columns">
 	      <label>Start Date
-		<input type="text" class="fdatepicker" name="start-date" value="<?php echo $date; ?>"/>
+		<input type="text" class="fdatepicker" name="start-date" value="<?php echo $start_date; ?>"/>
 	      </label>
 	    </div>
 	    <div class="large-2 columns">
 	      <label>&nbsp;
 		<select class="foundation" name="start-hour">
-		    <?php for( $i=1; $i<=12; $i++ ) : ?><option value=<?php echo $i; ?> <?php if( $i == $hour ) echo "selected=\"selected\""; ?>><?php echo $i; ?></option><?php endfor; ?>
+		    <?php for( $i=1; $i<=12; $i++ ) : ?><option value=<?php echo $i; ?> <?php if( $i == $start_hour ) echo "selected=\"selected\""; ?>><?php echo $i; ?></option><?php endfor; ?>
 		</select>
 	      </label>
 	    </div>
 	    <div class="large-2 columns">
 	      <label>&nbsp;
 		<select class="foundation" name="start-minute">
-		    <?php for( $i=0; $i<60; $i++ ) : ?><option value=<?php echo $i; ?> <?php if( $i == $minute ) echo "selected=\"selected\""; ?>><?php if( $i < 10 ) echo '0'; echo $i; ?></option><?php endfor; ?>
+		    <?php for( $i=0; $i<60; $i++ ) : ?><option value=<?php echo $i; ?> <?php if( $i == $start_minute ) echo "selected=\"selected\""; ?>><?php if( $i < 10 ) echo '0'; echo $i; ?></option><?php endfor; ?>
 		</select>
 	      </label>
 	    </div>
 	    <div class="large-2 columns">
 	      <label>&nbsp;
 		<select class="foundation" name="start-suffix">
-			<option value="AM" <?php if( 'AM' == $time_suffix ) echo "selected=\"selected\""; ?>>AM</option>
-			<option value="PM" <?php if( 'PM' == $time_suffix ) echo "selected=\"selected\""; ?>>PM</option>
+			<option value="AM" <?php if( 'AM' == $start_time_suffix ) echo "selected=\"selected\""; ?>>AM</option>
+			<option value="PM" <?php if( 'PM' == $start_time_suffix ) echo "selected=\"selected\""; ?>>PM</option>
 		</select>
 	      </label>
 	    </div>
 	  </div>
-	<!--
 	  <div class="row">
-	    <div class="large-12 columns">
-	      <?php $clients = $retrieve->clients(); ?>
-	      <label>Client
-		<select name="client">
-		  <option value="0">No client</option>
-		  <?php $this_client = get_post_meta( $event->ID, 'client', true ); ?>
-		  <?php foreach( $clients as $client ) : ?>
-		  <option value="<?php echo $client->ID; ?>" <?php if( $client->ID == $this_client ) echo "selected=\"selected\""; ?>><?php echo $client->display_name ?></option>
-		  <?php endforeach; ?>
+	    <div class="large-6 columns">
+	      <label>End Date
+		<input type="text" class="fdatepicker" name="end-date" value="<?php echo $end_date; ?>"/>
+	      </label>
+	    </div>
+	    <div class="large-2 columns">
+	      <label>&nbsp;
+		<select class="foundation" name="end-hour">
+		    <?php for( $i=1; $i<=12; $i++ ) : ?><option value=<?php echo $i; ?> <?php if( $i == $end_hour ) echo "selected=\"selected\""; ?>><?php echo $i; ?></option><?php endfor; ?>
+		</select>
+	      </label>
+	    </div>
+	    <div class="large-2 columns">
+	      <label>&nbsp;
+		<select class="foundation" name="end-minute">
+		    <?php for( $i=0; $i<60; $i++ ) : ?><option value=<?php echo $i; ?> <?php if( $i == $end_minute ) echo "selected=\"selected\""; ?>><?php if( $i < 10 ) echo '0'; echo $i; ?></option><?php endfor; ?>
+		</select>
+	      </label>
+	    </div>
+	    <div class="large-2 columns">
+	      <label>&nbsp;
+		<select class="foundation" name="end-suffix">
+			<option value="AM" <?php if( 'AM' == $end_time_suffix ) echo "selected=\"selected\""; ?>>AM</option>
+			<option value="PM" <?php if( 'PM' == $end_time_suffix ) echo "selected=\"selected\""; ?>>PM</option>
 		</select>
 	      </label>
 	    </div>
 	  </div>
-	-->
 	  <div class="row">
 	    <div class="large-12 columns">
 	      <label>Projects</label>
@@ -317,13 +335,8 @@ class parts {
 	      <?php endforeach; ?>
 	    </div>
 	  </div>
-	  <div class="row">
-	    <div class="large-12 columns">
-	      <label>Notes (private)
-		<textarea name="notes" placeholder="Notes about your event"><?php echo get_post_meta( $event->ID, 'notes', true ); ?></textarea>
-	      </label>
-	    </div>
-	  </div>
+	  <?php form::textarea( array( 'label' => 'Details', 'name' => 'details', 'placeholder' => 'Details about your event', 'value' => get_post_meta( $event->ID, 'details', true ) ) ); ?>
+	  <?php form::textarea( array( 'label' => 'Notes', 'name' => 'notes', 'placeholder' => 'Notes about your event', 'value' => get_post_meta( $event->ID, 'notes', true ) ) ); ?>
 	  <div class="row">
 	    <div class="large-12 columns">
 	      <input name="ID" value="<?php echo $event->ID; ?>" class="hidden">

@@ -97,8 +97,8 @@ jQuery(function($){
 		$form.find('.response').html('Updating event...').show();
 		$.post(ajaxurl, $form.serialize(), function(res){
 			console.log(res);
-			//location.reload();
 			$form.find('.response').html('The event has been updated.').show();
+			location.reload();
 		});
 	});
 
