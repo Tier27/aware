@@ -270,6 +270,21 @@ class parts {
 	  </div>
 	  <div class="row">
 	    <div class="large-6 columns">
+	      <label>Date
+		<input type="text" class="fdatepicker" name="date-controller" value="<?php echo $start_date; ?>"/>
+	      </label>
+	    </div>
+	  </div>
+	  <div class="row">
+	    <div class="large-12 columns">
+	      Duration<br>
+		<input type="radio" name="duration" value="1"><label>All day (7-3)</label>
+		<input type="radio" name="duration" value="2"><label>All day (9-6)</label>
+		<input type="radio" name="duration" value="3"><label>Custom</label>
+	    </div>
+	  </div>
+	  <div class="row duration custom hide">
+	    <div class="large-6 columns">
 	      <label>Start Date
 		<input type="text" class="fdatepicker" name="start-date" value="<?php echo $start_date; ?>"/>
 	      </label>
@@ -297,7 +312,7 @@ class parts {
 	      </label>
 	    </div>
 	  </div>
-	  <div class="row">
+	  <div class="row duration custom hide">
 	    <div class="large-6 columns">
 	      <label>End Date
 		<input type="text" class="fdatepicker" name="end-date" value="<?php echo $end_date; ?>"/>

@@ -120,4 +120,33 @@ jQuery(function($){
 		});
 	});
 
+	$('input[name="duration"]').click(function(){
+		$form = $(this).closest('form');
+		if( $(this).val() == 3 ) 
+			$form.find('.duration.custom').show();
+		else 
+			$form.find('.duration.custom').hide();
+		if( $(this).val() == 1 ) {
+			$form.find('select[name="start-hour"]').val('7');
+			$form.find('select[name="start-minute"]').val('0');
+			$form.find('select[name="start-suffix"]').val('AM');
+			$form.find('select[name="end-hour"]').val('3');
+			$form.find('select[name="end-minute"]').val('0');
+			$form.find('select[name="end-suffix"]').val('PM');
+		}
+		if( $(this).val() == 2 ) {
+			$form.find('select[name="start-hour"]').val('9');
+			$form.find('select[name="start-minute"]').val('0');
+			$form.find('select[name="start-suffix"]').val('AM');
+			$form.find('select[name="end-hour"]').val('6');
+			$form.find('select[name="end-minute"]').val('0');
+			$form.find('select[name="end-suffix"]').val('PM');
+		}
+	});
+
+	$('input[name="date-controller"]').change(function(){
+		$form = $(this).closest('form');
+		$form.find('input[name="start-date"], input[name="end-date"]').val($(this).val());
+	});
+
 });
