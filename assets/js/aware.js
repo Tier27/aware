@@ -70,6 +70,7 @@ jQuery(function($){
 		$.post(ajaxurl, $form.serialize(), function(res){
 			console.log(res);
 			location.reload();
+			$(window).scrollTop(0);
 			$form.find('.response').html('The project has been updated.').show();
 		});
 	});
@@ -80,15 +81,19 @@ jQuery(function($){
 		$.post(ajaxurl, $form.serialize(), function(res){
 			console.log(res);
 			location.reload();
+			$(window).scrollTop(0);
 		});
 	});
 
 	$('input[name="aware-delete-project"]').click(function(){
 		$form = $(this).closest('form');
+		$accordion = $(this).closest('.accordion-navigation');
 		$form.find('.response').html('Deleting project...').show();
 		ID = $form.find('input[name="ID"]').val();
 		$.post(ajaxurl, { action: 'admin_delete_project', ID: ID }, function(res){
+			$accordion.remove();	
 			location.reload();
+			$(window).scrollTop(0);
 		});
 	});
 
