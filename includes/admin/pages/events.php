@@ -30,9 +30,6 @@ jQuery(document).foundation({
     toggleable: true
   }
 });
-jQuery('.fdatepicker').fdatepicker({
-	closeButton: false
-});
 jQuery('.fdatepicker').datepicker({
 });
 </script>
