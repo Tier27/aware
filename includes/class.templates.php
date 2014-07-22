@@ -43,12 +43,12 @@ class templates {
         <ul class="dropdown">
           <li><a href="<?php echo site_url( 'client/message' ); ?>">Start conversation</a></li>
           <li class="divider"></li>
-          <?php $args = array( 'author' => get_current_user_id() ); ?>
+          <?php $args = array( 'client' => get_current_user_id() ); ?>
           <?php foreach( $retrieve->threads( $args ) as $thread ) : ?>
           <li><a href="<?php echo get_the_permalink( $thread->ID ); ?>"><?php echo $thread->post_title; ?></a></li>
 	  <?php endforeach; ?>
           <li class="divider"></li>
-          <li><a href="<?php echo site_url( 'client/conversation' ); ?>">See all →</a></li>
+          <li><a href="<?php echo site_url( 'client/conversations' ); ?>">See all →</a></li>
         </ul>
       </li>
       <li class="divider"></li>
