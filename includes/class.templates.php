@@ -52,7 +52,12 @@ class templates {
         </ul>
       </li>
       <li class="divider"></li>
-      <li><a href="<?php echo site_url( 'client' ); ?>"><?php echo get_avatar(); ?> Dashboard</a></li>
+      <li class="has-dropdown">
+        <a href="<?php echo site_url( 'client' ); ?>"><?php echo get_avatar(); ?> Dashboard</a>
+        <ul class="dropdown">
+          <li><a href="<?php echo wp_logout_url(); ?>">Log out</a></li>
+        </ul>
+      </li>
     </ul>
   </section>
 	<?php }
