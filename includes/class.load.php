@@ -12,6 +12,7 @@ class load {
 
 		$this->includes();
 		$this->actions();
+		$this->hooks();
 		global $templates;
 		global $retrieve;
 		$templates = new templates();
@@ -24,6 +25,8 @@ class load {
 
 	private static function includes() {
 
+		require_once AWARE_PATH . 'includes/class.schema.php'; 
+		require_once AWARE_PATH . 'includes/class.table.php'; 
 		require_once AWARE_PATH . 'includes/class.templates.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.parts.php'; 
 		require_once AWARE_PATH . 'includes/class.retrieve.php'; 
@@ -52,6 +55,11 @@ class load {
 		add_action('admin_init', array( __CLASS__, 'admin_actions' ));
 		//add_action('init', array( __CLASS__, 'roles' ));
 
+	}
+
+	public function hooks() {
+		register_activation_hook( __FILE__, array( __CLASS__, 'activate') );
+		register_deactivation_hook( dirname( __FILE__ ) . '/class.load.php', array( __CLASS__, 'deactivate') );
 	}
 
 	public function register_css() {
@@ -154,6 +162,16 @@ class load {
 
 	public function admin_actions() {
 		actions::init();
+	}
+
+	public function activate() {
+		echo 'hi!';
+		die;
+	}
+
+	public function deactivate() {
+		echo 'bye!';
+		die;
 	}
 
 }

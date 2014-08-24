@@ -123,8 +123,8 @@ class ajax {
 			'post_name' => sanitize_title($_POST['name']),
 		);
 		$post_id = wp_update_post( $args );
+		update_post_meta( $post_id, 'duration', $_POST['duration'] );
 		update_post_meta( $post_id, 'notes', $_POST['notes'] );
-		//update_post_meta( $post_id, 'clients', $_POST['clients'] );
 		$clients = retrieve::clients();
 		foreach( $clients as $client ) delete_user_meta( $client->ID, 'projects', $post_id );
 		foreach( $_POST['clients'] as $client ) add_user_meta( $client, 'projects', $post_id );

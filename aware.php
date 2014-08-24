@@ -31,11 +31,54 @@ define( 'AWARE_DIR_NAME', plugin_basename( dirname( __FILE__ ) ) );
 define( 'AWARE_BASE_NAME', plugin_basename( __FILE__ ) );
 define( 'AWARE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'AWARE_URL', plugin_dir_url( __FILE__ ) );
+define( 'AWARE_PREFIX', 'aware_' );
 
 require_once AWARE_PATH . 'includes/class.load.php'; 
 require_once AWARE_PATH . 'includes/class.utility.php'; 
 
 $load = new load();
-
+register_activation_hook( __FILE__, '\aware\activate' );
+register_deactivation_hook( __FILE__, '\aware\deactivate' );
+function activate(){
+	Schema::create('clients', function($table)
+	{
+		$table->increments('id');
+		$table->string('first_name');
+		$table->string('last_name');
+		$table->integer('user_id');
+		$table->string('notes');
+	});
+	Schema::create('projects', function($table)
+	{
+		$table->increments('id');
+		$table->integer('client_id');
+		$table->string('duration');
+		$table->string('details');
+		$table->string('notes');
+	});
+	Schema::create('events', function($table)
+	{
+		$table->increments('id');
+		$table->string('name');
+		$table->date('date');
+		$table->string('duration');
+		$table->string('details');
+		$table->string('notes');
+	});
+	Schema::create('communications', function($table)
+	{
+		$table->increments('id');
+		$table->integer('to');
+		$table->integer('from');
+		$table->string('subject');
+		$table->mediumText('content');
+	});
+}
+function deactivate(){
+	Schema::drop('clients');
+	Schema::drop('projects');
+	Schema::drop('events');
+	Schema::drop('communications');
+}
 /*****************************/
 
