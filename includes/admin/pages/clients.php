@@ -10,9 +10,10 @@
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
      
-   <br>
-
-  <?php parts::accordion_clients(); ?>
+<?php
+	ini_set('display_errors', true);
+	View::make('admin-users', array('clients' => Retrieve::clients()));
+?>
  
 <script>
 jQuery(document).foundation({

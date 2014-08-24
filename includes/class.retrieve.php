@@ -1,7 +1,7 @@
 <?php
 namespace aware;
 
-class retrieve {
+class Retrieve {
 
 	public function events ( $args = array() ) {
 
@@ -53,7 +53,7 @@ class retrieve {
 
 	}
 
-	public function clients() {
+	public static function clients() {
 
 		$args = array( 'role' => 'client' );
 		if( get_option( 'aware_development_mode' ) == 1 ) $args['role'] = '';
