@@ -27,6 +27,9 @@ class load {
 
 		require_once AWARE_PATH . 'includes/class.schema.php'; 
 		require_once AWARE_PATH . 'includes/class.table.php'; 
+		require_once AWARE_PATH . 'includes/class.view.php'; 
+		require_once AWARE_PATH . 'includes/class.iterator.php'; 
+		require_once AWARE_PATH . 'includes/class.route.php'; 
 		require_once AWARE_PATH . 'includes/class.templates.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.parts.php'; 
 		require_once AWARE_PATH . 'includes/class.retrieve.php'; 
@@ -46,6 +49,7 @@ class load {
 
 	public function actions() {
 
+		add_action('init', array( __CLASS__, 'load_routes' ));
 		add_action('init', array( __CLASS__, 'register_css' ));
 		add_action('admin_print_styles', array( __CLASS__, 'do_css' ));
 		add_action('admin_print_scripts', array( __CLASS__, 'do_scripts' ));
@@ -60,6 +64,11 @@ class load {
 	public function hooks() {
 		register_activation_hook( __FILE__, array( __CLASS__, 'activate') );
 		register_deactivation_hook( dirname( __FILE__ ) . '/class.load.php', array( __CLASS__, 'deactivate') );
+	}
+
+
+	public function load_routes() {
+		require_once AWARE_PATH . 'app/routes.php';
 	}
 
 	public function register_css() {

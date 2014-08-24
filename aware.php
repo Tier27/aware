@@ -26,6 +26,7 @@
  */
 
 namespace aware;
+ini_set('display_errors', true);
 define( 'AWARE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'AWARE_DIR_NAME', plugin_basename( dirname( __FILE__ ) ) );
 define( 'AWARE_BASE_NAME', plugin_basename( __FILE__ ) );
