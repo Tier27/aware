@@ -36,6 +36,8 @@ class load {
 		require_once AWARE_PATH . 'includes/admin/class.classes.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.capabilities.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.actions.php'; 
+		require_once AWARE_PATH . 'includes/admin/class.seeds.php'; 
+		require_once AWARE_PATH . 'includes/admin/class.maintenance.php'; 
 
 	}
 

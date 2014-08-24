@@ -215,3 +215,7 @@ select.foundation {
 .small-text {
 	font-size: 16px;
 }
+.forest-green {
+	background-color: #006400 !important;
+	color: white !important;
+}

@@ -29,6 +29,10 @@ class retrieve {
 
 	}
 
+	public function conversations ( $args = array( 'posts_per_page' => -1 ) ) {
+		return self::threads( $args );
+	}
+
 	public function thread_families ( $args = array( 'posts_per_page' => -1 ) ) {
 		$families = array();
 		$threads = self::threads( $args );
@@ -36,7 +40,7 @@ class retrieve {
 		return $families;
 	}
 
-	public function updates ( $args = array() ) {
+	public function updates ( $args = array( 'posts_per_page' => -1) ) {
 
 		$basis = array(
 			'post_type'	=> 'update',
@@ -53,6 +57,13 @@ class retrieve {
 
 		$args = array( 'role' => 'client' );
 		if( get_option( 'aware_development_mode' ) == 1 ) $args['role'] = '';
+		return get_users( $args );
+
+	}
+
+	public function __clients() {
+
+		$args = array( 'role' => 'client' );
 		return get_users( $args );
 
 	}

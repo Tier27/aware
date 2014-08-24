@@ -14,10 +14,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 function awareShowRolesPage() {
-	$role = new \AWARERole();
-	$role->add( 'editor', 'aware_change_roles' );
-	$role->speak();
-	print_r( array('b'=>'o', 'o'=>'b') );
 	/*
 	 * Check whether user can edit roles
 	 */

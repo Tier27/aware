@@ -24,7 +24,6 @@ class AWARERole extends WP_Roles {
 	 * A radical function
 	*/
 	public function speak() {
-		echo "I am AWARERole";
 	}
 	/**
 	 * Main AWARERole Instance.
@@ -58,18 +57,11 @@ class AWARERole extends WP_Roles {
 	public static function capabilities() {
 
 		return array(
-			'aware_view_menu'            => __( 'View Admin Menu', 'aware' ),
 			'aware_view_dashboard'       => __( 'View Dashboard', 'aware' ),
-			'aware_manage'               => __( 'View List (Manage)', 'aware' ),
-			'aware_add_entry'            => __( 'Add Entry', 'aware' ),
-			'aware_edit_entry'           => __( 'Edit Entry', 'aware' ),
-			'aware_delete_entry'         => __( 'Delete Entry', 'aware' ),
-			'aware_view_public'          => __( 'View Public Entries', 'aware' ),
-			'aware_view_private'         => __( 'View Private Entries', 'aware' ),
-			'aware_view_unlisted'        => __( 'View Unlisted Entries', 'aware' ),
-			'aware_edit_categories'      => __( 'Edit Categories', 'aware' ),
+			'aware_add_client'            => __( 'Add Client', 'aware' ),
+			'aware_edit_client'           => __( 'Edit Client', 'aware' ),
+			'aware_delete_client'         => __( 'Delete Client', 'aware' ),
 			'aware_change_settings'      => __( 'Change Settings', 'aware' ),
-			'aware_manage_template'      => __( 'Manage Templates', 'aware' ),
 			'aware_change_roles'         => __( 'Change Role Capabilities', 'aware' )
 		);
 	}
