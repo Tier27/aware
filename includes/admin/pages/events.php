@@ -32,5 +32,11 @@ jQuery(document).foundation({
 });
 jQuery('.fdatepicker').datepicker({
 });
+jQuery(function($){
+	$('input[name="date"]').change(function(){
+		$('input[name="start-date"]').val($(this).val()).trigger('change');
+		$('input[name="end-date"]').val($(this).val()).trigger('change');
+	});
+})
 </script>
  

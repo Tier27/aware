@@ -9,7 +9,7 @@
 </ul>
 <div class="tabs-content">
   <div class="content active" id="panel2-1">
-  	<?php parts::accordion_clients(); ?>
+	<?php View::make('admin-users', array('clients' => Client::all(), 'projects' => Retrieve::projects())); ?>
   </div>
   <div class="content" id="panel2-2">
   	<?php parts::accordion_projects(); ?> 

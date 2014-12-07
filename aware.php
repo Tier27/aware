@@ -47,39 +47,98 @@ function activate(){
 		$table->string('first_name');
 		$table->string('last_name');
 		$table->integer('user_id');
+		$table->integer('manager_id');
+		$table->boolean('emails', true);
+		$table->string('notes');
+	});
+	Schema::create('managers', function($table)
+	{
+		$table->increments('id');
+		$table->string('first_name');
+		$table->string('last_name');
+		$table->integer('user_id');
 		$table->string('notes');
 	});
 	Schema::create('projects', function($table)
 	{
 		$table->increments('id');
 		$table->integer('client_id');
+		$table->string('name');
+		$table->time('start_date');
+		$table->_time('end_date');
 		$table->string('duration');
-		$table->string('details');
-		$table->string('notes');
+		$table->mediumText('details');
+		$table->mediumText('notes');
 	});
 	Schema::create('events', function($table)
 	{
 		$table->increments('id');
+		$table->integer('project_id');
 		$table->string('name');
-		$table->date('date');
+		$table->time('start_date');
+		$table->_time('end_date');
 		$table->string('duration');
 		$table->string('details');
 		$table->string('notes');
 	});
-	Schema::create('communications', function($table)
+	Schema::create('threads', function($table)
 	{
 		$table->increments('id');
-		$table->integer('to');
-		$table->integer('from');
+		$table->integer('recipient');
+		$table->integer('sender');
+		$table->integer('inbound');
+		$table->integer('outbound');
 		$table->string('subject');
-		$table->mediumText('content');
+		$table->boolean('read');
+		$table->time('created_at');
 	});
+	Schema::create('messages', function($table)
+	{
+		$table->increments('id');
+		$table->integer('thread');
+		$table->integer('recipient');
+		$table->integer('sender');
+		$table->string('content');
+		$table->boolean('read');
+		$table->time('created_at');
+	});
+	Schema::create('updates', function($table)
+	{
+		$table->increments('id');
+		$table->integer('project_id');
+		$table->string('subject');
+		$table->string('content');
+		$table->time('created_at');
+	});
+	Schema::create('client_updates', function($table)
+	{
+		$table->increments('id');
+		$table->integer('client_id');
+		$table->integer('update_id');
+		$table->boolean('read');
+	});
+
+	Seed::clients();
+	Seed::managers();
+	Seed::projects();
+	Seed::updates();
+	Seed::threads();
+	Seed::events();
 }
 function deactivate(){
 	Schema::drop('clients');
+	Schema::drop('managers');
 	Schema::drop('projects');
 	Schema::drop('events');
-	Schema::drop('communications');
+	Schema::drop('threads');
+	Schema::drop('messages');
+	Schema::drop('updates');
+	Schema::drop('client_updates');
+}
+
+function refresh(){
+	deactivate();
+	activate();
 }
 /*****************************/
 

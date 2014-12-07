@@ -40,15 +40,27 @@ class Table {
 		$this->fields[] = " `$name` date ";
 	}
 
-	public function boolean($name)
+	public function time($name)
 	{
-		$this->fields[] = " `$name` boolean ";
+		$this->fields[] = " `$name` timestamp default current_timestamp ";
+	}
+
+	public function _time($name)
+	{
+		$this->fields[] = " `$name` timestamp ";
+	}
+
+	public function boolean($name, $default = 0)
+	{
+		$this->fields[] = " `$name` boolean DEFAULT $default ";
 	}
 
 	public function prepare()
 	{
 		$this->fields[] = $this->key;
 		$this->sql .= implode(',', $this->fields);
+		echo $this->sql;
+		echo "<<BR><BR>";
 		$this->close();
 	}
 

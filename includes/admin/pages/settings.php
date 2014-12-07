@@ -12,6 +12,14 @@
   <div class="small-12 medium-10 columns">
     <h3>Settings</h3>
 
+    <h6>Aware Administrator</h6>
+	<?php $aware_administrator = Settings::adminID(); ?>
+	<select name="aware-administrator">
+		<?php foreach( get_users() as $user ) : ?>
+		<option value="<?php echo $user->ID; ?>" <?php if( $user->ID == $aware_administrator ) echo "selected=\"selected\""; ?>><?php echo $user->data->display_name; ?></option>
+		<?php endforeach; ?>
+	</select>
+
     <h6>Administrative Email</h6>
     <input type="text" name="aware-administrative-email" value="<?php echo get_option('aware_administrative_email');?>">
 <!--
@@ -84,7 +92,6 @@
 </form>
 
 <?php
-print_r( seeds::clients() );
 $maintenance = new maintenance( array( 'active' => false ) );
 $maintenance->purge_conversations();
 $maintenance->purge_updates();

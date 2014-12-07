@@ -6,6 +6,6 @@ class api {
 		add_shortcode( 'aware', array( __CLASS__, 'shortcode' ) );		
 	}
 	public function shortcode() {
-		return 'foo and bar!';
+		return View::template('aware');
 	}
 }

@@ -12,7 +12,7 @@
      
 <?php
 	ini_set('display_errors', true);
-	View::make('admin-users', array('clients' => Retrieve::clients()));
+	View::make('admin-users', array('clients' => Client::all(), 'projects' => Retrieve::projects()));
 ?>
  
 <script>

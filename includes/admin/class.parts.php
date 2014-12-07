@@ -49,7 +49,8 @@ class parts {
 	}
 
 	public function accordion_projects() { global $retrieve;
-		$projects = $retrieve->projects();
+		//$projects = $retrieve->projects();
+		$projects = Project::all();
 	?>
 
 	      <div class="large-12 medium-12 small-12 columns panel section">
@@ -59,9 +60,10 @@ class parts {
 		foreach( $projects as $project ) :
 	?>
 	  <dd class="accordion-navigation">
-	    <a href="#project-<?php echo $project->ID; ?>"><?php echo get_avatar( $project->ID ); ?> <?php echo $project->post_title; ?></a>
-	    <div id="project-<?php echo $project->ID; ?>" class="content">
-		<?php self::accordion_form_project( $project ); ?>
+	    <a href="#project-<?php echo $project->id; ?>"><?php echo $project->name; ?></a>
+	    <div id="project-<?php echo $project->id; ?>" class="content">
+		<?php //self::accordion_form_project( $project ); ?>
+		<?php View::template('forms/project', array('project' => $project, 'action' => 'update')); ?>
 	    </div>
 	  </dd>
 	<?php
@@ -70,7 +72,8 @@ class parts {
 	  <dd class="accordion-navigation">
 	    <a href="#project-new"><i class="fa fa-plus"></i> Add new</a>
 	    <div id="project-new" class="content">
-	      <?php self::accordion_form_project( null, 'add' ); ?>
+	      <?php //self::accordion_form_project( null, 'add' ); ?>
+		  <?php View::template('forms/project', array('action' => 'add')); ?>
 	    </div>
 	  </dd>
 		</dl>
@@ -79,7 +82,8 @@ class parts {
 	}
 
 	public function accordion_events() { global $retrieve;
-		$events = $retrieve->events();
+		//$events = $retrieve->events();
+		$events = Event::all();
 	?>
 
 	      <div class="large-12 medium-12 small-12 columns panel section">
@@ -89,9 +93,10 @@ class parts {
 		foreach( $events as $event ) :
 	?>
 	  <dd class="accordion-navigation">
-	    <a href="#event-<?php echo $event->ID; ?>"><?php echo get_avatar( $event->ID ); ?> <?php echo $event->post_title; ?></a>
-	    <div id="event-<?php echo $event->ID; ?>" class="content">
-		<?php self::accordion_form_event( $event ); ?>
+	    <a href="#event-<?php echo $event->id; ?>"><?php echo $event->name; ?></a>
+	    <div id="event-<?php echo $event->id; ?>" class="content">
+		<?php //self::accordion_form_event( $event ); ?>
+		<?php View::template('forms/event', array('event' => $event, 'action' => 'update')); ?>
 	    </div>
 	  </dd>
 	<?php
@@ -100,7 +105,8 @@ class parts {
 	  <dd class="accordion-navigation">
 	    <a href="#event-new"><i class="fa fa-plus"></i> Add new</a>
 	    <div id="event-new" class="content">
-	      <?php self::accordion_form_event( null, 'add' ); ?>
+	      <?php //self::accordion_form_event( null, 'add' ); ?>
+		  <?php View::template('forms/event', array('action' => 'add')); ?>
 	    </div>
 	  </dd>
 		</dl>
@@ -194,45 +200,38 @@ class parts {
 	  <div class="row">
 	    <div class="large-6 columns">
 	      <label>Name
-		<input type="text" name="name" value="<?php echo $project->post_title; ?>"/>
+		<input type="text" name="name" value="<?php echo $project->name; ?>"/>
 	      </label>
 	    </div>
 	  </div>
-	<!--
 	  <div class="row">
-	    <div class="large-12 columns">
-	      <?php $clients = $retrieve->clients(); ?>
-	      <label>Client
-		<select name="client">
-		  <option value="0">No client</option>
-		  <?php $this_client = get_post_meta( $project->ID, 'client', true ); ?>
-		  <?php foreach( $clients as $client ) : ?>
-		  <option value="<?php echo $client->ID; ?>" <?php if( $client->ID == $this_client ) echo "selected=\"selected\""; ?>><?php echo $client->display_name ?></option>
-		  <?php endforeach; ?>
+	    <div class="large-6 columns">
+	      <label>Duration
+		<select class="foundation" name="duration">
+		  <option>1/4 day</option>
+		  <option>1/2 day</option>
+		  <option>Full day</option>
+		  <option>Multiple days</option>
 		</select>
 	      </label>
 	    </div>
 	  </div>
-	-->
 	  <div class="row">
 	    <div class="large-12 columns">
-	      <label>Clients</label>
-	      <?php $these_clients = get_post_meta( $project->ID, 'clients', true ); ?>
-	      <?php foreach( $clients as $client ) : ?>
-	      <input type="checkbox" name="clients[]" value="<?php echo $client->ID; ?>" <?php if( in_array( $project->ID, get_user_meta( $client->ID, 'projects' ) ) ) echo "checked=\"checked\""; ?>><label for="checkbox1"><?php echo $client->display_name; ?></label><br>
-	      <?php endforeach; ?>
+	      <label>Client</label>
+		  <?php Client::options($project->client_id); ?>
 	    </div>
 	  </div>
 	  <div class="row">
 	    <div class="large-12 columns">
 	      <label>Notes (private)
-		<textarea name="notes" placeholder="Notes about your project"><?php echo get_post_meta( $project->ID, 'notes', true ); ?></textarea>
+		<textarea name="notes" placeholder="Notes about your project"><?php echo $project->notes; ?></textarea>
 	      </label>
 	    </div>
 	  </div>
 	  <div class="row">
 	    <div class="large-12 columns">
-	      <input name="ID" value="<?php echo $project->ID; ?>" class="hidden">
+	      <input name="id" value="<?php echo $project->id; ?>" class="hidden">
 	      <input name="action" value="admin_<?php echo $action; ?>_project" class="hidden">
 	      <input name="aware-<?php echo $action; ?>-project" class="button radius tiny" value="<?php echo ucfirst($action); ?> project">
 	      <?php if( $action == 'update' ) : ?><input name="aware-delete-project" class="red button radius tiny" value="Delete project"><?php endif; ?>
@@ -249,7 +248,7 @@ class parts {
 	public function accordion_form_event( $event = NULL, $action = 'update' ) { global $retrieve; ?>
 	<?php
 	//To handle the mess that is time conversion
-	$start_time = ( $start_time = get_post_meta( $event->ID, 'start_time', true ) ) ? $start_time : time(); 
+	$start_time = strtotime($event->start_date);//( $start_time = get_post_meta( $event->ID, 'start_time', true ) ) ? $start_time : time(); 
 	$start_date = date('m/d/Y', $start_time);
 	$start_hour = date('g', $start_time);
 	$start_minute = date('i', $start_time);
@@ -264,14 +263,14 @@ class parts {
 	  <div class="row">
 	    <div class="large-12 columns">
 	      <label>Name
-		<input type="text" name="name" value="<?php echo $event->post_title; ?>"/>
+		<input type="text" name="name" value="<?php echo $event->name; ?>"/>
 	      </label>
 	    </div>
 	  </div>
 	  <div class="row">
 	    <div class="large-6 columns">
 	      <label>Date
-		<input type="text" class="fdatepicker" name="date-controller" value="<?php echo $start_date; ?>"/>
+		<input type="text" class="fdatepicker" name="date" value="<?php echo $start_date; ?>"/>
 	      </label>
 	    </div>
 	  </div>
@@ -343,18 +342,21 @@ class parts {
 	  </div>
 	  <div class="row">
 	    <div class="large-12 columns">
-	      <label>Projects</label>
+	      <label>Project</label>
+		  <!--
 	      <?php $projects = $retrieve->projects(); ?>
 	      <?php foreach( $projects as $project ) : ?>
 	      <input type="checkbox" name="projects[]" value="<?php echo $project->ID; ?>" <?php if( in_array( $event->ID, get_post_meta( $project->ID, 'events' )) ) echo "checked=\"checked\""; ?>><label for="checkbox1"><?php echo $project->post_title; ?></label><br>
 	      <?php endforeach; ?>
+		  -->
+		  <?php Project::options($event->project_id); ?>
 	    </div>
 	  </div>
-	  <?php form::textarea( array( 'label' => 'Details', 'name' => 'details', 'placeholder' => 'Details about your event', 'value' => get_post_meta( $event->ID, 'details', true ) ) ); ?>
-	  <?php form::textarea( array( 'label' => 'Notes', 'name' => 'notes', 'placeholder' => 'Notes about your event', 'value' => get_post_meta( $event->ID, 'notes', true ) ) ); ?>
+	  <?php form::textarea( array( 'label' => 'Details', 'name' => 'details', 'placeholder' => 'Details about your event', 'value' => $event->details ) ); ?>
+	  <?php form::textarea( array( 'label' => 'Notes', 'name' => 'notes', 'placeholder' => 'Notes about your event', 'value' => $event->notes ) ); ?>
 	  <div class="row">
 	    <div class="large-12 columns">
-	      <input name="ID" value="<?php echo $event->ID; ?>" class="hidden">
+	      <input name="ID" value="<?php echo $event->id; ?>" class="hidden">
 	      <input name="action" value="admin_<?php echo $action; ?>_event" class="hidden">
 	      <input name="aware-<?php echo $action; ?>-event" class="button radius tiny" value="<?php echo ucfirst($action); ?> event">
 	      <?php if( $action == 'update' ) : ?><input name="aware-delete-event" class="red button radius tiny" value="Delete event"><?php endif; ?>

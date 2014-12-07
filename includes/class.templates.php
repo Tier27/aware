@@ -34,18 +34,31 @@ class templates {
       </li>
       <?php endif; ?>
       <li class="divider"></li>
-      <li><a href="#"><i class="fa fa-calendar"></i> Calendar</a></li>
+      <li><a href="<?php echo site_url('client/calendar'); ?>"><i class="fa fa-calendar"></i> Calendar</a></li>
       <li class="divider"></li>
       <li><a href="#"><i class="fa fa-bolt"></i> Notifications</a></li>
       <li class="divider"></li>
       <li class="has-dropdown">
-        <a href="#"><i class="fa fa-comments"></i> Communication</a>
+        <a href="<?php echo Route::inbox(); ?>"><i class="fa fa-comments"></i> Inbox</a>
+        <ul class="dropdown">
+          <?php $args = array( 'client' => get_current_user_id() ); ?>
+          <?php foreach( Thread::inbox() as $thread ) : ?>
+		  <?php $thread = Thread::cast((array)$thread); ?>
+          <li><a href="<?php echo $thread->getPermalink(); ?>"><?php echo $thread->subject; ?></a></li>
+	  <?php endforeach; ?>
+          <li class="divider"></li>
+          <li><a href="<?php echo site_url( 'client/conversations' ); ?>">See all →</a></li>
+        </ul>
+      </li>
+      <li class="has-dropdown">
+        <a href="#"><i class="fa fa-comments"></i> Outbox</a>
         <ul class="dropdown">
           <li><a href="<?php echo site_url( 'client/message' ); ?>">Start conversation</a></li>
           <li class="divider"></li>
           <?php $args = array( 'client' => get_current_user_id() ); ?>
-          <?php foreach( $retrieve->threads( $args ) as $thread ) : ?>
-          <li><a href="<?php echo get_the_permalink( $thread->ID ); ?>"><?php echo $thread->post_title; ?></a></li>
+          <?php foreach( Thread::outbox() as $thread ) : ?>
+		  <?php $thread = Thread::cast((array)$thread); ?>
+          <li><a href="<?php echo $thread->getPermalink(); ?>"><?php echo $thread->subject; ?></a></li>
 	  <?php endforeach; ?>
           <li class="divider"></li>
           <li><a href="<?php echo site_url( 'client/conversations' ); ?>">See all →</a></li>
@@ -53,7 +66,7 @@ class templates {
       </li>
       <li class="divider"></li>
       <li class="has-dropdown">
-        <a href="<?php echo site_url( 'client' ); ?>"><?php echo get_avatar(); ?> Dashboard</a>
+        <a href="<?php echo site_url( 'client' ); ?>"><?php echo get_avatar( get_current_user_id() ); ?> Dashboard</a>
         <ul class="dropdown">
           <li><a href="<?php echo wp_logout_url(); ?>">Log out</a></li>
         </ul>
@@ -142,8 +155,9 @@ class templates {
 
 	<?php }
 
-	public function dashboard_accordion_events() { global $retrieve;
+	public function dashboard_accordion_events($client, $limit = 3, $full_page = false ) { global $retrieve;
 		$events = $retrieve->events();
+		$events = $client->events();
 	?>
 
 	      <div class="large-12 medium-12 small-12 columns panel section">
@@ -151,14 +165,7 @@ class templates {
 		<dl class="accordion" data-accordion>
 	<?php
 		foreach( $events as $event ) :
-	?>
-	  <dd class="accordion-navigation">
-	    <a href="#event-<?php echo $event->ID; ?>"><?php echo $event->post_title; ?></a>
-	    <div id="event-<?php echo $event->ID; ?>" class="content">
-		<?php self::accordion_event( $event ); ?>
-	    </div>
-	  </dd>
-	<?php
+			View::template('accordion/event', array('event' => $event));
 		endforeach;
 	?>
 		</dl>
@@ -169,6 +176,23 @@ class templates {
 	      </div>
 	<?php
 	}
+
+	public function dashboard_event($event_id) { 
+		$event = Event::find($event_id);
+	?>
+
+	      <div class="large-12 medium-12 small-12 columns panel section">
+		<h3><i class="fa fa-space-shuttle"></i> <?php echo $event->name; ?></h3><hr>
+		<dl class="accordion" data-accordion>
+	  <dd class="accordion-navigation">
+	    <a href="#event-<?php echo $event->id; ?>"><?php echo $event->name; ?></a>
+	  </dd>
+		</dl>
+		<br>
+	      </div>
+	<?php
+	}
+
 
 	public function dashboard_projects( $client, $limit = -1, $full_page = false ) { global $retrieve;
 
@@ -199,8 +223,9 @@ class templates {
 
 	<?php }
 
-	public function dashboard_accordion_projects() { global $retrieve;
+	public function dashboard_accordion_projects($client, $limit = 3, $full_page = false) { global $retrieve;
 		$projects = $retrieve->projects();
+		$projects = $client->projects();
 	?>
 
 	      <div class="large-12 medium-12 small-12 columns panel section">
@@ -210,8 +235,8 @@ class templates {
 		foreach( $projects as $project ) :
 	?>
 	  <dd class="accordion-navigation">
-	    <a href="#project-<?php echo $project->ID; ?>"><?php echo $project->post_title; ?></a>
-	    <div id="project-<?php echo $project->ID; ?>" class="content">
+	    <a href="#project-<?php echo $project->id; ?>"><?php echo $project->name; ?></a>
+	    <div id="project-<?php echo $project->id; ?>" class="content">
 		<?php self::accordion_project( $project ); ?>
 	    </div>
 	  </dd>
@@ -234,6 +259,7 @@ class templates {
 			'posts_per_page' => $limit,
 		 );
           	$threads = $retrieve->updates( $args );
+		$threads = $client->updates();
 ?>
 
   <div class="small-12 columns panel section">
@@ -244,8 +270,8 @@ class templates {
 		foreach( $threads as $thread ) :
           ?>
           <div class="panel">
-            <h6><a href="#"><?php echo $thread->post_title; ?></a></h6>
-            <p><?php echo $thread->post_content; ?></p>
+            <h6><a href="#"><?php echo $thread->subject; ?></a></h6>
+            <p><?php echo $thread->content; ?></p>
           </div> <!--/.panel-->
 
 	  <?php 
@@ -265,7 +291,7 @@ class templates {
 			'client' => $client->ID,
 			'posts_per_page' => $limit,
 		 );
-		$updates = $retrieve->updates( $args );
+		$updates = $client->updates(); 
 	?>
 
 	      <div class="large-12 medium-12 small-12 columns panel section">
@@ -275,10 +301,10 @@ class templates {
 		foreach( $updates as $update ) :
 	?>
 	  <dd class="accordion-navigation">
-	    <a href="#update-<?php echo $update->ID; ?>"><?php echo $update->post_title; ?>
-		<span class="pull-right"><?php echo date('m/d/Y, g:iA', strtotime($update->post_date)); ?></span>
+	    <a href="#update-<?php echo $update->id; ?>"><?php echo $update->subject; ?>
+		<span class="pull-right"><?php echo $update->date(); ?></span>
    	    </a>
-	    <div id="update-<?php echo $update->ID; ?>" class="content">
+	    <div id="update-<?php echo $update->id; ?>" class="content">
 		<?php self::accordion_update( $update ); ?>
 	    </div>
 	  </dd>
@@ -288,7 +314,7 @@ class templates {
 		</dl>
 		<br>
     	<?php if( !$full_page ) : ?>
-	      <a href="<?php echo site_url('client/updates/' . $client->ID); ?>" class="right">See All Updates »</a>
+	      <a href="<?php echo site_url('client/updates'); ?>" class="right">See All Updates »</a>
 	<?php endif; ?>
 	      </div>
 	<?php
@@ -296,30 +322,28 @@ class templates {
 
 	public function dashboard_conversations( $client, $limit = -1, $full_page = false ) { global $retrieve; 
 
-		$args = array( 
-			'client' => $client->ID,
-			'posts_per_page' => $limit,
-		);
-          	$threads = $retrieve->threads( $args );
-		$thread_families = retrieve::thread_families( $args ); 
-?>
+		return self::inbox();
+	}
 
-  <div class="small-12 columns panel section">
+	public function inbox() {
+
+		$threads = Thread::inbox();
+
+    ?><div class="small-12 columns panel section">
     <h3><i class="fa fa-space-shuttle"></i> Conversations</h3><hr>
       <div class="aware-widget-section">
         <h5><i class="fa fa-long-arrow-right"></i> Recent Conversations</h5>
           <?php
-		foreach( $thread_families as $thread ) :
-		$title = ( $thread->post_parent == 0 ) ? $thread->post_title : $thread_families[$thread->post_parent]->post_title;
-		$author = get_userdata( $thread->post_author );
+		foreach( $threads as $thread ) :
+		$thread = Thread::cast((array)$thread);
+		$author = get_userdata( $thread->sender );
           ?>
           <div class="panel aware-widget-communication-discussion">
-            <a href="<?php echo get_the_permalink( $thread->ID ); ?>"><?php echo $title; ?></a>
-	    <span class="pull-right"><?php echo date('m/d/Y, g:ia', strtotime($thread->post_date)); ?></span>
+            <a href="<?php echo $thread->getPermalink(); ?>"><?php echo $thread->subject ?></a>
+	    <span class="pull-right"><?php echo date('m/d/Y, g:ia', strtotime($thread->created_at)); ?></span>
 	    <br>
 	    <br>
-            <h6><?php echo get_avatar( $thread->post_author ); ?> <?php echo $author->display_name; ?></h6>
-            <p><?php echo $thread->post_content; ?></p>
+            <h6><?php echo get_avatar( $thread->sender ); ?> <?php echo $author->display_name; ?></h6>
           </div> <!--/.panel-->
 
 	  <?php 
@@ -333,6 +357,11 @@ class templates {
   </div> <!--/.section-->
 	
 	<?php }
+
+	public function threads()
+	{
+		print_r( Thread::inbox() );
+	}
 
 	public function dashboard_communications( $client, $limit = -1, $full_page = false ) { global $retrieve; 
 
@@ -358,7 +387,7 @@ class templates {
 
 	<?php }
 
-	public function reply_message_box() { global $client; ?>
+	public function reply_message_box($thread) { global $client; ?>
 
 <form id="aware-message-box">
 <div class="row">
@@ -388,8 +417,12 @@ class templates {
 
         <input name="aware-post-reply" class="button radius tiny" value="Post reply">
         <input name="aware-cancel-reply" class="button radius tiny alert" value="Cancel">
+        <input name="aware-delete-thread" class="button radius tiny alert" value="Delete">
 	<input name="parent" value="<?php echo get_the_id(); ?>" style="display: none;">
+	<input name="thread" value="<?php echo $thread->id; ?>" style="display: none;">
 	<input name="client" value="<?php echo $client->ID; ?>" style="display: none;">
+	<input name="recipient" value="<?php echo $thread->otherParty(get_current_user_id())->ID; ?>" style="display: none;">
+	<input name="sender" value="<?php echo get_current_user_id(); ?>" style="display: none;">
 	<input name="action" value="aware_post_reply" style="display: none;">
 
       </div> <!--/.aware-widget-section-->
@@ -425,6 +458,32 @@ class templates {
           </div> <!--/.panel-->
 	<?php }
 
+	public function thread_reply( $reply, $thread ) { ?>
+          <div class="panel aware-widget-communication-discussion aware-thread aware-thread-reply">
+            <div class="row">
+              <div class="small-12 columns">
+                <h6><a><?php echo get_avatar( get_the_author( $reply->sender ) ); ?> <?php echo $thread->party($reply->sender)->display_name; ?></a></h6>
+				<p><?php echo $thread->date(); ?></p>
+		<?php echo $reply->content; ?>
+              </div>
+            </div> <!--/.row-->
+
+            <hr />
+            <div class="row">
+              <div class="small-12 columns">
+                <ul class="inline-list pull-right aware-thread-reply-tools">
+                </ul>
+              </div>
+            </div> <!--/.row-->
+
+          </div> <!--/.panel-->
+	<?php }
+
+	public static function in_box()
+	{
+		return self::dashboard_conversations( wp_get_current_user() );
+	}
+
 	public function thread_box() { ?>
 <form id="aware-create-thread">
 <div class="row collapse">
@@ -432,17 +491,9 @@ class templates {
     <h3>Start a conversation</h3>
 
     <h6>Subject</h6>
-    <input type="text" name="title">
+    <input type="text" name="subject">
     <h6>Client</h6>
-    <?php
-        global $retrieve;
-        $clients = $retrieve->clients();
-        ?>
-    <select name="client">
-    <?php foreach( $clients as $client ) : ?>
-      <option value="<?php echo $client->ID; ?>"><?php echo $client->display_name; ?></option>
-    <?php endforeach; ?>
-    </select>
+	<?php Client::options(null, 'recipient'); ?>
   </div>
 </div> <!--/.row-->
 
@@ -489,17 +540,13 @@ class templates {
     <h3>Create Update</h3>
 
     <h6>Subject</h6>
-    <input type="text" name="title">
-    <h6>Client</h6>
-    <?php 
-	global $retrieve;
-	$clients = $retrieve->clients(); 
-	?>
-    <select name="client">
-    <?php foreach( $clients as $client ) : ?>
-      <option value="<?php echo $client->ID; ?>"><?php echo $client->display_name; ?></option>
-    <?php endforeach; ?>
-    </select>
+    <input type="text" name="subject">
+	  <div class="row">
+	    <div class="large-12 columns">
+	      <label>Clients</label>
+		  <?php Client::checkboxes(); ?>
+	    </div>
+	  </div>
   </div>
 </div> <!--/.row-->
 
@@ -509,7 +556,7 @@ class templates {
       <div class="aware-widget-section">
         
 
-        <div class="button-bar aware-thread-comment-tools">
+        <div class="button-bar aware-thread-comment-tools hide">
           <ul class="button-group">
             <li><a href="#" class="small button"><i class="fa fa-bold"></i></a></li>
             <li><a href="#" class="small button"><i class="fa fa-italic"></i></a></li>
@@ -545,22 +592,17 @@ class templates {
 	<form>
 	  <div class="row">
 	    <div class="large-12 columns">
-		Starts <?php echo date('m/d/Y, g:iA', get_post_meta($event->ID, 'start_time', true)); ?>
+		Starts <?php echo $event->starts(); ?>
 	    </div>
 	  </div>
 	  <div class="row">
 	    <div class="large-12 columns">
-		Ends <?php echo date('m/d/Y, g:iA', get_post_meta($event->ID, 'end_time', true)); ?>
+		Ends <?php echo $event->ends(); ?>
 	    </div>
 	  </div>
 	  <div class="row">
 	    <div class="large-12 columns">
-		<p><?php echo get_post_meta( $event->ID, 'details', true ); ?></p>
-	    </div>
-	  </div>
-	  <div class="row">
-	    <div class="large-12 columns">
-		<p><?php echo get_post_meta( $event->ID, 'notes', true ); ?></p>
+		<p><?php echo $event->details; ?></p>
 	    </div>
 	  </div>
 	</form>
@@ -570,7 +612,7 @@ class templates {
 	<form>
 	  <div class="row">
 	    <div class="large-12 columns">
-		<p><?php echo get_post_meta( $project->ID, 'notes', true ); ?></p>
+		<p><?php echo $project->notes; ?></p>
 	    </div>
 	  </div>
 	</form>
@@ -580,7 +622,7 @@ class templates {
 	<form>
 	  <div class="row">
 	    <div class="large-12 columns">
-		<p><?php echo $update->post_content; ?></p>
+		<p><?php echo $update->content; ?></p>
 	    </div>
 	  </div>
 	</form>

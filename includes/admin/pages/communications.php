@@ -10,15 +10,19 @@
 <div id="aware">
 
 <ul class="tabs" data-tab>
-  <li class="tab-title active"><a href="#panel2-1">Conversations</a></li>
-  <li class="tab-title"><a href="#panel2-2">Updates</a></li>
+  <li class="tab-title active"><a href="#panel2-1">Inbox</a></li>
+  <li class="tab-title"><a href="#panel2-2">New</a></li>
+  <li class="tab-title"><a href="#panel2-3">Updates</a></li>
 </ul>
 
 <div class="tabs-content">
   <div class="content active" id="panel2-1">
-	<?php templates::thread_box(); ?>
+	<?php templates::in_box(); ?>
   </div>
   <div class="content" id="panel2-2">
+	<?php templates::thread_box(); ?>
+  </div>
+  <div class="content" id="panel2-3">
 	<?php templates::update_box(); ?>
   </div>
 </div>

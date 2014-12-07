@@ -64,4 +64,17 @@ function soft_is_admin() {
 	if( current_user_can( 'manage_options' ) ) return true;
 }
 
+function client_select()
+{
+    global $retrieve;
+    $clients = $retrieve->clients();
+    ?>
+    <select name="recipient">
+    <?php foreach( $clients as $client ) : ?>
+      <option value="<?php echo $client->ID; ?>"><?php echo $client->display_name; ?></option>
+    <?php endforeach; ?>
+    </select>
+	<?php
+}
+
 ?>

@@ -61,6 +61,7 @@ class AWAREAdminMenu {
 
 		$submenu[0]   = array( 'hook' => 'dashboard', 'page_title' => 'AWARE : Dashboard', 'menu_title' => 'Dashboard', 'capability' => 'manage_options', 'menu_slug' => 'aware_dashboard', 'function' => array( __CLASS__, 'showPage' ) );
 		$submenu[20]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Clients', 'menu_title' => __( 'Clients', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_clients', 'function' => array( __CLASS__, 'showPage' ) );
+		$submenu[30]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Managers', 'menu_title' => __( 'Managers', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_managers', 'function' => array( __CLASS__, 'showPage' ) );
 		$submenu[40]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Projects', 'menu_title' => __( 'Projects', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_projects', 'function' => array( __CLASS__, 'showPage' ) );
 		$submenu[60]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Events', 'menu_title' => __( 'Events', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_events', 'function' => array( __CLASS__, 'showPage' ) );
 		$submenu[80]  = array( 'hook' => 'add', 'page_title' => 'AWARE : Communications', 'menu_title' => __( 'Communications', 'aware' ), 'capability' => 'manage_options', 'menu_slug' => 'aware_communications', 'function' => array( __CLASS__, 'showPage' ) );
@@ -95,6 +96,10 @@ class AWAREAdminMenu {
 
 			case 'aware_clients':
 				include_once AWARE_PATH . 'includes/admin/pages/clients.php';
+				break;
+
+			case 'aware_managers':
+				include_once AWARE_PATH . 'includes/admin/pages/managers.php';
 				break;
 
 			case 'aware_projects':

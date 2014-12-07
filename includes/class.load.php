@@ -15,6 +15,8 @@ class load {
 		$this->hooks();
 		global $templates;
 		global $retrieve;
+		global $ajax;
+		global $rewrite;
 		$templates = new templates();
 		$retrieve = new retrieve();
 		$ajax = new ajax();
@@ -44,6 +46,17 @@ class load {
 		require_once AWARE_PATH . 'includes/admin/class.actions.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.seeds.php'; 
 		require_once AWARE_PATH . 'includes/admin/class.maintenance.php'; 
+		require_onCE AWARE_PATH . 'app/models/Client.php';
+		require_onCE AWARE_PATH . 'app/models/Manager.php';
+		require_onCE AWARE_PATH . 'app/models/Message.php';
+		require_onCE AWARE_PATH . 'app/models/Settings.php';
+		require_onCE AWARE_PATH . 'app/models/Thread.php';
+		require_onCE AWARE_PATH . 'app/models/User.php';
+		require_onCE AWARE_PATH . 'app/models/Update.php';
+		require_onCE AWARE_PATH . 'app/models/Seed.php';
+		require_onCE AWARE_PATH . 'app/models/Project.php';
+		require_onCE AWARE_PATH . 'app/models/Event.php';
+		require_onCE AWARE_PATH . 'app/models/Utility.php';
 
 	}
 
@@ -55,6 +68,7 @@ class load {
 		add_action('admin_print_scripts', array( __CLASS__, 'do_scripts' ));
 		add_action('wp_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ));
 		add_action('wp_head', array( __CLASS__, 'print_ajaxurl' ));
+		add_action('wp_enqueue_scripts', array( __CLASS__, 'maybe_style' ));
 		add_action('init', array( __CLASS__, 'conversations' ));
 		add_action('admin_init', array( __CLASS__, 'admin_actions' ));
 		//add_action('init', array( __CLASS__, 'roles' ));
@@ -76,6 +90,7 @@ class load {
 		wp_register_style( 'aware-admin-custom', AWARE_URL . "assets/css/custom-style.css", array(), '0.0.1' );
 		wp_register_style( 'aware-foundation', AWARE_URL . "assets/css/foundation.css", array(), '0.0.1' );
 		wp_register_style( 'aware-foundation-ui', AWARE_URL . "assets/css/ui.css", array(), '0.0.1' );
+		wp_register_style( 'aware-foundation-calendar', AWARE_URL . "assets/css/foundation.calendar.css", array(), '0.0.1' );
 	}
 
 	public function do_css() {
@@ -84,6 +99,12 @@ class load {
 		if( $_GET['page'] == 'aware_dashboard' ) :
 			wp_enqueue_style('aware-foundation');
 			wp_enqueue_style('aware-foundation-ui');
+		endif;
+	}
+
+	public function maybe_style() {
+		if( get_query_var('aware_type') == 'calendar' ) :
+			wp_enqueue_style('aware-foundation-calendar');
 		endif;
 	}
 
@@ -184,5 +205,9 @@ class load {
 	}
 
 }
+
+
+//$role = get_role( 'client' );
+//$role->add_cap('read_private_posts');
 
 ?>

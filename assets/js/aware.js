@@ -2,15 +2,17 @@ var global_data = {};
 var local_data;
 jQuery(function($){
 
+	$('li a[href="#panel2-2"]').click();
 	$('input[name="aware-create-communication"]').click(function(){
 
 		var $form = $(this).closest('form');
 		$.post(ajaxurl, $form.serialize(), function(res) {
-			local_data = $.parseJSON(res);
-			global_data.email_data = local_data;
 			console.log(res);
-			if( local_data.action == 'redirect' ) window.location.href = local_data.location;
-			if( typeof(local_data.response) != 'undefined' ) $form.find('.response').html("Your message has been posted successfully").show();
+			//location.reload();
+			//local_data = $.parseJSON(res);
+			//global_data.email_data = local_data;
+			//if( local_data.action == 'redirect' ) window.location.href = local_data.location;
+			//if( typeof(local_data.response) != 'undefined' ) $form.find('.response').html("Your message has been posted successfully").show();
 		});
 
 	});
@@ -19,12 +21,23 @@ jQuery(function($){
 
 		var $form = $(this).closest('form');
 		$.post(ajaxurl, $form.serialize(), function(res) {
-			local_data = $.parseJSON(res);
-			global_data.email_data = local_data;
 			console.log(res);
+			//local_data = $.parseJSON(res);
+			//global_data.email_data = local_data;
 			location.reload();
 		});
 
+	});
+
+	$('input[name="aware-delete-thread"]').click(function(){
+		data = {
+			thread : $('input[name="thread"]').val(),
+			action : 'aware_delete_thread'
+		}
+		$.post(ajaxurl, data, function(res){
+			console.log(res);
+			location.reload();
+		});
 	});
 	
 	$('input[name="aware-update-settings"]').click(function(){
@@ -36,26 +49,28 @@ jQuery(function($){
 		});
 	});
 
-	$('input[name="aware-update-client"]').click(function(){
+	$('input[name="aware-update-client"], input[name="aware-update-manager"]').click(function(){
 		$form = $(this).closest('form');
 		$form.find('.response').html('Updating client...').show();
 		$.post(ajaxurl, $form.serialize(), function(res){
 			console.log(res);
-			location.reload();
+			//location.reload();
 			$form.find('.response').html('The client has been updated.').show();
 		});
 	});
 
-	$('input[name="aware-add-client"]').click(function(){
+	$('input[name="aware-add-client"], input[name="aware-add-manager"]').click(function(){
 		$form = $(this).closest('form');
-		$form.find('.response').html('Adding client...').show();
+		console.log($form.serialize());
+		$form.find('.response').html('Adding...').show();
 		$.post(ajaxurl, $form.serialize(), function(res){
 			console.log(res);
-			location.reload();
+			//location.reload();
 		});
 	});
 
 	$('input[name="aware-delete-client"]').click(function(){
+		if( !confirm("Are you sure you want to delete this client? This operation is not reversable") ) return;
 		$form = $(this).closest('form');
 		$form.find('.response').html('Deleting client...').show();
 		ID = $form.find('input[name="ID"]').val();
@@ -69,7 +84,7 @@ jQuery(function($){
 		$form.find('.response').html('Updating project...').show();
 		$.post(ajaxurl, $form.serialize(), function(res){
 			console.log(res);
-			location.reload();
+			//location.reload();
 			$(window).scrollTop(0);
 			$form.find('.response').html('The project has been updated.').show();
 		});
@@ -127,11 +142,22 @@ jQuery(function($){
 
 	$('input[name="duration"]').click(function(){
 		$form = $(this).closest('form');
-		if( $(this).val() == 3 ) 
+		if( $(this).val() == 5 ) {
 			$form.find('.duration.custom').show();
-		else 
+			$form.find('input[name="date"]').closest('.row').hide();
+		} else {
 			$form.find('.duration.custom').hide();
+			$form.find('input[name="date"]').closest('.row').show();
+		}
 		if( $(this).val() == 1 ) {
+			$form.find('select[name="start-hour"]').val('7');
+			$form.find('select[name="start-minute"]').val('0');
+			$form.find('select[name="start-suffix"]').val('AM');
+			$form.find('select[name="end-hour"]').val('11');
+			$form.find('select[name="end-minute"]').val('0');
+			$form.find('select[name="end-suffix"]').val('AM');
+		}
+		if( $(this).val() == 2 ) {
 			$form.find('select[name="start-hour"]').val('7');
 			$form.find('select[name="start-minute"]').val('0');
 			$form.find('select[name="start-suffix"]').val('AM');
@@ -139,7 +165,15 @@ jQuery(function($){
 			$form.find('select[name="end-minute"]').val('0');
 			$form.find('select[name="end-suffix"]').val('PM');
 		}
-		if( $(this).val() == 2 ) {
+		if( $(this).val() == 3 ) {
+			$form.find('select[name="start-hour"]').val('9');
+			$form.find('select[name="start-minute"]').val('0');
+			$form.find('select[name="start-suffix"]').val('AM');
+			$form.find('select[name="end-hour"]').val('1');
+			$form.find('select[name="end-minute"]').val('30');
+			$form.find('select[name="end-suffix"]').val('PM');
+		}
+		if( $(this).val() == 4 ) {
 			$form.find('select[name="start-hour"]').val('9');
 			$form.find('select[name="start-minute"]').val('0');
 			$form.find('select[name="start-suffix"]').val('AM');
@@ -153,5 +187,7 @@ jQuery(function($){
 		$form = $(this).closest('form');
 		$form.find('input[name="start-date"], input[name="end-date"]').val($(this).val());
 	});
+
+	
 
 });
