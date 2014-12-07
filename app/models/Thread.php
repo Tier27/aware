@@ -76,7 +76,8 @@ class Thread extends \stdClass {
 	{
 		global $wpdb;
 		$query = " SELECT * FROM wp_aware_threads t ";
-		$query .= " JOIN wp_users u ON t.sender = u.ID ";
+		//This was causing a query to return an empty result, and may not be needed anymore due to the where call below
+		//$query .= " JOIN wp_users u ON t.sender = u.ID ";
 		$query .= " WHERE t.id = $id ";
 		$row = $wpdb->get_row($query, "ARRAY_A");
 		$thread = static::cast($row);
