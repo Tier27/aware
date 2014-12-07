@@ -21,6 +21,7 @@ Class Route {
 		$rewrite->rules[] = array('pattern' => $pattern, 'type' => $type, 'query_var' => $query_var);
 		return true;
 
+		/*
 		add_action( 'init', array( __CLASS__, 
 		function()
 		{
@@ -35,6 +36,7 @@ Class Route {
 			$query_vars[] = 'client_id';
 			return $query_vars;
 		} ) );
+		*/
 	}
 
 	public static function rewrite($url, $type, $query_var)

@@ -60,7 +60,7 @@ class Thread extends \stdClass {
 	public static function unread()
 	{
 		$recipient = get_current_user_id();
-		$query = "SELECT * FROM wp_aware_threads t JOIN wp_aware_messages m ON t.id = m.thread WHERE m.recipient = $recipient AND m.read IS NULL GROUP BY thread";
+		$query = "SELECT *, t.id FROM wp_aware_threads t JOIN wp_aware_messages m ON t.id = m.thread WHERE m.recipient = $recipient AND (m.read IS NULL OR m.read = 0) GROUP BY thread";
 		return static::result($query);
 	}
 

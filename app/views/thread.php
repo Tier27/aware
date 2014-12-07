@@ -4,8 +4,12 @@
 	$thread = Thread::find($thread_id);
 	if( !$thread->isActive() ) 
 		Route::to(home_url('/client'));
-	//else
-	//	$thread->markAsRead();
+	//This was commented out earlier, I don't know why, but I do remember a long debugging session around here.
+	//EDIT: I think we need to be more careful about marking as read - it should really be the messages, and not the threads. I'll do this now.
+	//Actually, it looks like its already been done by a past me.
+	//Beware the bug
+	else
+		$thread->markAsRead();
 ?>
 
 <div class="row collapse">

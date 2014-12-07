@@ -49,7 +49,7 @@
           <li><a href="<?php echo $thread->getPermalink(); ?>"><?php echo $thread->subject; ?></a></li>
 	  <?php endforeach; ?>
           <li class="divider"></li>
-          <li><a href="<?php echo site_url( 'client/conversations' ); ?>">See all →</a></li>
+          <li><a href="<?php echo site_url( 'client/conversations/inbox' ); ?>">See all →</a></li>
         </ul>
       </li>
       <li class="has-dropdown">
@@ -63,7 +63,7 @@
           <li><a href="<?php echo $thread->getPermalink(); ?>"><?php echo $thread->subject; ?></a></li>
 	  <?php endforeach; ?>
           <li class="divider"></li>
-          <li><a href="<?php echo site_url( 'client/conversations' ); ?>">See all →</a></li>
+          <li><a href="<?php echo site_url( 'client/conversations/outbox' ); ?>">See all →</a></li>
         </ul>
       </li>
       <li class="divider"></li>

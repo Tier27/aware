@@ -10,7 +10,7 @@ function aware_client_login_redirect() {
 }
 
 function soi_login_redirect( $redirect_to, $request, $user  ) {
-	return ( is_array( $user->roles ) && ( in_array( 'client', $user->roles ) || true ) ) ? site_url('/client') : admin_url();
+	return ( is_array( $user->roles ) && ( in_array( 'client', $user->roles ) ) ) ? site_url('/client') : admin_url();
 } 
 add_filter( 'login_redirect', 'soi_login_redirect', 10, 3 );
 

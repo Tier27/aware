@@ -149,7 +149,7 @@ class templates {
 	?>
       </div> <!--/.aware-widget-section-->
     <?php if( !$full_page ) : ?>
-    <a href="<?php echo site_url('client/events/' . $client->ID); ?>" class="right">See All Events »</a>
+    <a href="<?php echo site_url('client/events'); ?>" class="right">See All Events »</a>
     <?php endif; ?>
   </div> <!--/.section-->
 
@@ -171,7 +171,7 @@ class templates {
 		</dl>
 		<br>
     	<?php if( !$full_page ) : ?>
-	      <a href="<?php echo site_url('client/events/' . $client->ID); ?>" class="right">See All Events »</a>
+	      <a href="<?php echo site_url('client/events'); ?>" class="right">See All Events »</a>
 	<?php endif; ?>
 	      </div>
 	<?php
@@ -217,7 +217,7 @@ class templates {
 	?>
       </div> <!--/.aware-widget-section-->
     <?php if( !$full_page ) : ?>
-    <a href="<?php echo site_url('client/projects/' . $client->ID); ?>" class="right">See All Projects »</a>
+    <a href="<?php echo site_url('client/projects'); ?>" class="right">See All Projects »</a>
     <?php endif; ?>
   </div> <!--/.section-->
 
@@ -246,7 +246,7 @@ class templates {
 		</dl>
 		<br>
     	<?php if( !$full_page ) : ?>
-	      <a href="<?php echo site_url('client/projects/' . $client->ID); ?>" class="right">See All Projects »</a>
+	      <a href="<?php echo site_url('client/projects'); ?>" class="right">See All Projects »</a>
 	<?php endif; ?>
 	      </div>
 	<?php
@@ -280,7 +280,7 @@ class templates {
       </div> <!--/.aware-widget-section-->
 
     <?php if( !$full_page ) : ?>
-    <a href="<?php echo site_url('client/updates/' . $client->ID); ?>" class="right">See All Updates »</a>
+    <a href="<?php echo site_url('client/updates'); ?>" class="right">See All Updates »</a>
     <?php endif; ?>
   </div> <!--/.section-->
 	
@@ -352,7 +352,7 @@ class templates {
       </div> <!--/.aware-widget-section-->
 
     <?php if( !$full_page ) : ?>
-    <a href="<?php echo site_url('client/conversations/' . $client->ID); ?>" class="right">See All Conversations »</a>
+    <a href="<?php echo site_url('client/conversations'); ?>" class="right">See All Conversations »</a>
     <?php endif; ?>
   </div> <!--/.section-->
 	

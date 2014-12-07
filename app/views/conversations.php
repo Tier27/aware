@@ -21,11 +21,14 @@
           <?php
 		$args = array( 'client' => get_current_user_id(), 'post_parent' => 0 );
           	$threads = $retrieve->threads( $args );
-		$threads = Thread::inbox();
+		if( get_query_var('conversation_type') == 'outbox' )
+			$threads = Thread::outbox();
+		else
+			$threads = Thread::inbox();
 		foreach( $threads as $thread ) :
           ?>
           <div class="panel aware-widget-communication-discussion">
-            <h6 class="aware-thread-title"><img class="avatar" src="<?php echo AWARE_URL; ?>assets/img/avatar.png" alt="Avatar"> <a href="<?php echo $thread->subject; ?>"><?php echo $thread->subject; ?></a></h6>
+            <h6 class="aware-thread-title"><img class="avatar" src="<?php echo AWARE_URL; ?>assets/img/avatar.png" alt="Avatar"> <a href="<?php echo site_url(); ?>/client/thread/<?php echo $thread->id; ?>"><?php echo $thread->subject; ?></a></h6>
 <!--
             <p class="aware-thread-topic-details"><i class="fa fa-comment"></i><strong>27</strong> responses.  Last response by <a>Ryan</a>, <strong>2</strong> hours ago. (11:42pm, 06/10/14)</p>
 -->

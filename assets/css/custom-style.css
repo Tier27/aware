@@ -225,3 +225,6 @@ select.foundation {
 .day .project {
 	background: #dfd276;
 }
+.button {
+	cursor: pointer !important;
+}
