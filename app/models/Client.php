@@ -11,6 +11,7 @@ class Client {
 			$this->first_name = $data['first-name'];
 			$this->last_name = $data['last-name'];
 			$this->manager_id = $data['manager'];
+			$this->email = $data['email'];
 			$this->emails = $data['emails'];
 			$this->notes = $data['notes'];
 		}
@@ -121,6 +122,7 @@ class Client {
 	public static function findByUser($user_id)
 	{
 		global $wpdb;
+		if( $user_id == 1 ) return self::admin();
 		$query = "SELECT c.id, c.user_id, u.ID, u.display_name, c.first_name, c.last_name, c.notes, u.user_email as email FROM wp_aware_clients c JOIN wp_users u ON c.user_id = u.ID WHERE c.user_id = $user_id";
 		$user = $wpdb->get_row($query);
 		$client = Client::cast((array)$user);
@@ -193,6 +195,16 @@ class Client {
 			$___[] = static::cast($_);
 		}
 		return $___;
+	}
+
+	public static function admin()
+	{
+		$user = wp_get_current_user();
+		$admin = new Client(1, array(
+			'first-name' => 'Admin',
+			'email' => $user->user_email
+		));
+		return $admin;
 	}
 
 }
